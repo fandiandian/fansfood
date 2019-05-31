@@ -21,7 +21,7 @@
 爬虫代码的位置：/apps/assist_function/data_crawler, 文件保存路径相关的需要自己修改<br>
 爬取的数据是直接存储在 MongoDB 中，根据模型的设计，再进行分割转储到 MySQL 中<br>
 由于数据分为图片和其他一些文字信息，太大所以未上传至github，如果需要可以联系我，我将图片和mysql的文件发给你
-我的邮箱：yzliuyongfuf@vip.qq.com
+我的邮箱：yzliuyongfu@vip.qq.com
 
 ## xadmin 的适配 Django2.2 存在一些问题，需要作出一些函数修改
 安装：这个是最快的，git 的方式安装太慢了<br>
