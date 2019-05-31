@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+<html lang="zh-CN">
+<head>
+    <!-- 基础模板 -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- bootstrap 的响应式声明和 css 文件 -->
+    <meta name="viewport" content="width=device-width initial-scale=1">
+    <meta name="robots" content="index,follow">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/custome.css' %}">
+    <link rel="stylesheet" href="{% static 'css/message_style.css' %}">
+    <link rel="shortcut icon" href="{% static 'media/image/favicon.ico' %}">
+
+    {% block title %}
+        <title>留言 fans-food</title>
+    {% endblock %}
+
+</head>
+<body class="bg-light">
+
+{# 顶部导航 #}
+<nav class="navbar navbar-expand-lg navbar-light bg-white">
+    <a class="navbar-brand ml-4" href="{% url 'home_page' %}">
+        <img style="float: left; width: 201px; height: 42px" src="{% static 'media/image/fansfoodlogo.png' %}" alt="logo">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item {% if focus == 'home' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'home_page' %}">首页<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item"><a class="nav-link disabled" href="javascript:void(0)">|</a></li>
+            <li class="nav-item {% if focus == 'article' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'food:food_ranking' %}">美食排行榜</a>
+            </li>
+            <li class="nav-item"><a class="nav-link disabled" href="javascript:void(0)">|</a></li>
+            <li class="nav-item {% if focus == 'image' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'food:food_image_rank' %}">美食图片</a>
+            </li>
+            <li class="nav-item"><a class="nav-link disabled" href="javascript:void(0)">|</a></li>
+            <li class="nav-item {% if focus == 'message' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'message' %}">留言</a>
+            </li>
+            <li class="nav-item"><a class="nav-link disabled" href="javascript:void(0)">|</a></li>
+            <li class="nav-item {% if focus == 'about' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'about' %}">关于</a>
+            </li>
+        </ul>
+    </div>
+    <div class="collapse navbar-collapse mr-4" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+            {# 判断用户是否登录 #}
+            {% if not request.user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'user:login' %}">登录<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item"><a class="nav-link disabled" href="javascript:void(0)">|</a></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'user:register' %}">注册</a>
+                </li>
+            {% else %}
+                <li class="nav-item dropdown mr-2 hover">
+                    <button type="button" class="mr-2" id="jsUploadFoodArticle">
+                        上传美食文章
+                    </button>
+                </li>
+                <li class="nav-item dropdown mr-2 hover">
+                    <a class="nav-link dropdown-toggle" href="#"
+                       id="navbarDropdown" role="button" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        <img src="{% static 'media/image/message_no_1.png' %}" alt="消息"
+                             style="width: 32px; height: 32px; border-radius: 16px" class="hover" id="jsMessageImage">
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right mt-0 rounded-0 border-0" aria-labelledby="dropdownMenuLink">
+                        <a class="dropdown-item disabled" href="#" id="jsMessageTitle">没有新的消息</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'operator:user_message' %}">消息中心</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown hover">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        <img src="{{ MEDIA_URL }}{{ request.user.head_portrait }}" alt="用户头像"
+                             style="width: 32px; height: 32px; border-radius: 16px" class="hover">
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right mt-0 rounded-0 border-0" aria-labelledby="dropdownMenuLink">
+                        <a class="dropdown-item disabled" href="#">嗨！{{ request.user.nick_name }}</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'operator:user_center' %}">个人中心</a>
+                        <a class="dropdown-item" href="{% url 'user:logout' %}">安全退出</a>
+                    </div>
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+
+{# 页面主体 #}
+<div class="container" style="margin-top: 20px">
+    <div class="row">
+        {# 面包屑导航 #}
+        <div class="col-md-12">
+            <ol class="breadcrumb">
+                <li class="breadcrumb-item" aria-current="page"></li>
+                <li class="breadcrumb-item"><a href="{% url 'home_page' %}">首页</a></li>
+                <li class="breadcrumb-item active" aria-current="page">留言</li>
+            </ol>
+        </div>
+        <div class="col-md-12 mt-4 mb-4">
+            <div class="row mt-4 mb-4">
+                <div class="col-2 text-center ml-3">
+                    <div class="list-group" id="list-tab" role="tablist">
+                        <a class="list-group-item {% if message_focus == 'add' %}active{% endif %}" id="add-message-list"
+                           data-toggle="list" href="#add-message" role="tab" aria-controls="unread">添加留言</a>
+                        <a class="list-group-item {% if message_focus == 'read' %}active{% endif %}" id="read-message-list"
+                           data-toggle="list" href="#read-message" role="tab" aria-controls="read">查看留言</a>
+                    </div>
+                </div>
+                <div class="col-9 ml-3">
+                    <div class="tab-content" id="nav-tabContent">
+                        <div class="tab-pane fade {% if message_focus == 'add' %}show active{% endif %}"
+                             id="add-message" role="tabpanel" aria-labelledby="add-message-list">
+                            <div class="col-12">
+                                <form id="messageBoardForm">
+                                    <div class="card">
+                                        <div class="card-header" id="cardHeader">
+                                            <h5 class="mt-1 mb-1">留言板</h5>
+                                        </div>
+                                        <div class="card-body">
+                                            <div class="form-group">
+                                                <label for="nickNameInput">昵称</label>
+                                                <input type="text" name="name" class="form-control" id="nickNameInput" placeholder="请输入你的昵称" required>
+                                                <small id="nickNameHelp" class="form-text text-muted">昵称仅用于展示，长度不超过20字
+                                                </small>
+                                            </div>
+                                            <div class="form-group">
+                                                <label for="emailInput">邮箱</label>
+                                                <input type="email" name="email" class="form-control" id="emailInput" placeholder="请输入你的邮箱" required>
+                                                <small id="emailHelp" class="form-text text-muted">
+                                                    邮箱仅用于展示，网站作者可能会通过邮件同你沟通
+                                                </small>
+                                            </div>
+                                            <div class="form-group mb-1">
+                                                <label for="messageTextarea">留言内容</label>
+                                                <textarea class="form-control" name="message" id="messageTextarea" rows="5" required></textarea>
+                                                <small id="messageHelp" class="form-text text-muted">
+                                                    请输入你的留言内容，长度不超过300字
+                                                </small>
+                                            </div>
+                                        </div>
+                                        <div class="card-footer bg-white">
+                                            <button class="float-left" type="reset" id="resetMessage">
+                                                清空
+                                            </button>
+                                            <button class="float-right" type="button" id="submitMessage">
+                                                提交
+                                            </button>
+                                        </div>
+                                    </div>
+                                </form>
+                            </div>
+                        </div>
+                        <div class="tab-pane fade {% if message_focus == 'read' %}show active{% endif %}"
+                             id="read-message" role="tabpanel" aria-labelledby="read-message-list">
+                            {% if message %}
+                                <div class="row">
+                                    <div class="col-12">
+                                        <div class="rounded" id="accordion-read">
+                                            {% for read_message in message.object_list %}
+                                                <div class="card mb-1">
+                                                    <div class="card-header bg-white pb-2 pt-3" id="heading-read{{ forloop.counter }}">
+                                                        <div class="row">
+                                                            <div class="col-3 small">
+                                                                留言用户：{{ read_message.name }}
+                                                            </div>
+                                                            <div class="col-5 small">
+                                                                留言邮箱：{{ read_message.email }}
+                                                            </div>
+                                                            <div class="col-4 text-right small">
+                                                                留言时间：<span class="mr-4">{{ read_message.add_time|date:'Y-m-d' }}</span>
+                                                                <a role="button" data-toggle="collapse" href="#collapse-read{{ forloop.counter }}"
+                                                                   aria-expanded="false" aria-controls="collapse-read{{ forloop.counter }}">
+                                                                    <span class="mr-2">查看消息</span>
+                                                                </a>
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                    <div id="collapse-read{{ forloop.counter }}" class="collapse"
+                                                         aria-labelledby="heading-read{{ forloop.counter }}" data-parent="#accordion-read">
+                                                        <div class="card-body small">
+                                                            {{ read_message.message|linebreaksbr }}
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            {% endfor %}
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="row mt-5">
+                                    <div class="col-12">
+                                        <nav aria-label="Page navigation mt-3">
+                                            <ul class="pagination justify-content-center">
+                                                {% if message.has_previous %}
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="?{{ message.previous_page_number.querystring }}">&laquo;</a>
+                                                    </li>
+                                                {% else %}
+                                                    <li class="page-item disabled">
+                                                        <a class="page-link disabled">&laquo;</a>
+                                                    </li>
+                                                {% endif %}
+                                                {% for read_page in message.pages %}
+                                                    {% if read_page %}
+                                                        {% ifequal read_page message.number %}
+                                                            <li class="page-item disabled">
+                                                                <a class="page-link">{{ read_page }}</a>
+                                                            </li>
+                                                        {% else %}
+                                                            <li class="page-item">
+                                                                <a class="page-link" href="?{{ read_page.querystring }}">{{ read_page }}</a>
+                                                            </li>
+                                                        {% endifequal %}
+                                                    {% else %}
+                                                        {# 如果页面没有分页，则不显示任何内容#}
+                                                        <li class="none"><a href="" class="page">...</a></li>
+                                                    {% endif %}
+                                                {% endfor %}
+                                                {% if message.has_next %}
+                                                    <li class="page-item">
+                                                        <a class="page-link" href="?{{ message.next_page_number.querystring }}">&raquo;</a>
+                                                    </li>
+                                                {% else %}
+                                                    <li class="page-item disabled">
+                                                        <a class="page-link disabled">&raquo;</a>
+                                                    </li>
+                                                {% endif %}
+                                            </ul>
+                                        </nav>
+                                    </div>
+                                </div>
+                            {% else %}
+                                <p class="lead ml-2">目前没有任何留言...</p>
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="clearfix"></div>
+</div>
+
+<div id="page"></div>
+{# 页脚 #}
+{% block foot %}
+    <hr>
+    <footer class="footer navbar-fixed-bottom" style="margin-top: 20px">
+        <div class="container">
+            <div class="row" style="width:100%; margin: 40px auto 40px">
+                <div class="col-md-2"></div>
+                <div class="col-md-4" style="width: 100%">
+                    <p class="text-center">凡肴网 | fans-food</p>
+                </div>
+                <div class="col-md-4" style="width: 100%">
+                    <p class="text-center">Design by 刘小北 | 广ICP备66666666号-6</p>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+        </div>
+    </footer>
+{% endblock %}
+
+<!-- bootstrap 依赖的 js 文件 -->
+<script type="text/javascript" src="{% static 'js/jquery-3.4.0.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/popper.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+<!-- vue 的 js 文件 -->
+<!-- 写明 type 类型文件，一开始的时候没写，后来写错了，都导致了 vue is not defined 的错误 -->
+<script type="text/javascript" src="{% static 'js/vue.min.js' %}"></script>
+{% comment %}
+「html」页面使用了「ajax」进行异步数据的请求与响应时，会产生「403」错误。经查询，「django」的官方提供以解决方案
+将官方给出的代码保存到一个「js文件」中，并在「html」页面中导入
+记得一定要在加载完「jQuery」之后加载
+{% endcomment %}
+<script type="text/javascript" src="{% static 'js/crsf_ajax.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/custome.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        $('#submitMessage').on("click", function () {
+            var nick_name = $("#nickNameInput").val();
+            var email = $("#emailInput").val();
+            var message = $("#messageTextarea").val();
+            var pattern = /^([a-z0-9,!#\$%&'\*\+/=\?\^_`\{\|}~-]+(\.[a-z0-9,!#\$%&'\*\+/=\?\^_`\{\|}~-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*\.([a-z]{2,})){1}(;[a-z0-9,!#\$%&'\*\+/=\?\^_`\{\|}~-]+(\.[a-z0-9,!#\$%&'\*\+/=\?\^_`\{\|}~-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*\.([a-z]{2,}))*$/;
+            if (nick_name.length > 20) {
+                $('#nickNameHelp').text('昵称长度超过20个字符啦');
+                $('#nickNameInput').addClass('error');
+                return false
+            } else if (nick_name.length === 0) {
+                $('#nickNameHelp').text('昵称不能为空');
+                $('#nickNameInput').addClass('error');
+                return false
+            } else {
+                $('#nickNameInput').removeClass('error');
+                $('#nickNameHelp').text('合格的昵称');
+            }
+            if (pattern.test(email)) {
+                $('#emailHelp').text('邮箱符合要求');
+                $('#emailInput').removeClass('error');
+            } else {
+                $('#emailHelp').text('邮箱符合不符合要求');
+                $('#emailInput').addClass('error');
+                return false
+            }
+            if (message.length > 300) {
+                $('#messageHelp').text('留言内容超过300个字符啦');
+                $('#messageTextarea').addClass('error');
+                return false
+            } else if (message.length === 0) {
+                $('#messageHelp').text('留言内容不能为空');
+                $('#messageTextarea').addClass('error');
+                return false
+            } else {
+                $('#messageTextarea').removeClass('error');
+            }
+            $.ajax({
+                cache: false,
+                type: 'POST',
+                data: $('#messageBoardForm').serialize(),
+                url: "{% url 'operator:add_message_board' %}",
+                async: true,
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                },
+                success: function (data) {
+                    if (data.status === 'success') {
+                        alert('留言添加成功');
+                        $('#resetMessage').click();
+                    } else {
+                        alert('留言添加失败，请稍后再试');
+                    }
+                }
+            })
+        })
+    })
+</script>
+<script>
+    $(document).ready(function () {
+        var logged = '{{ request.user.is_authenticated }}';
+        console.log(logged);
+        if (logged === "True") {
+            $.ajax({
+                cache: false,
+                type: "GET",
+                async: true,
+                url: "{% url 'operator:get_user_message' %}",
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                },
+                success: function (data) {
+                    if (data.status === 'success') {
+                        if (data.counter > 0) {
+                            var image = "{% static 'media/image/message_1.png' %}";
+                            var message = '你有' + data.counter + '条未读消息';
+                            $('#jsMessageImage').attr('src', image);
+                            $('#jsMessageTitle').text(message)
+                        } else {
+                            return false
+                        }
+                    }
+                }
+            })
+        } else {
+            return false
+        }
+    })
+</script>
+<script>
+    $(document).ready(function () {
+        $('#jsUploadFoodArticle').on('click', function () {
+            $.ajax({
+                cache: false,
+                async: true,
+                type: "POST",
+                url: "{% url 'operator:upload_food_article' %}",
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                },
+                success: function (data) {
+                    if (data.status === 'success') {
+                        location.href = data.url
+                    } else {
+                        alert('操作失败，请稍后再试')
+                    }
+                }
+            })
+        })
+    })
+</script>
+</body>
+</html>

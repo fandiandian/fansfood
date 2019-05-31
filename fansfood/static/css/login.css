@@ -1,0 +1,246 @@
+* {
+    margin: 0;
+    padding: 0;
+}
+
+html {
+    height: 100%;
+}
+
+.wrap h3 {
+    font-size: 20px;
+    text-align: center;
+    color: #ffffff;
+    margin-bottom: 15px;
+    font-weight: normal;
+}
+
+.wrap p {
+    font-size: 14px;
+    color: #ffffff;
+    font-variant-ligatures: common-ligatures discretionary-ligatures historical-ligatures;
+}
+
+body {
+    min-height: 100vh;
+    box-sizing: border-box;
+    margin: 0;
+    padding-top: calc(50vh - 6em);
+    font: 150%/1.6 Microsoft Yahei, Palatino, serif;
+}
+
+body, .wrap::before {
+    background: url(../media/image/login_bg_6.jpg) 0 / cover fixed;
+}
+
+.wrap {
+    position: relative;
+    margin: 0 auto;
+    padding: 1em;
+    max-width: 23em;
+    background: hsla(0, 0%, 100%, .25) border-box;
+    overflow: hidden;
+    border-radius: .3em;
+    box-shadow: 0 0 0 1px hsla(0, 0%, 100%, .3) inset, 0 .5em 1em rgba(0, 0, 0, 0.6);
+    text-shadow: 0 1px 1px hsla(0, 0%, 100%, .3);
+}
+
+.wrap::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    margin: -30px;
+    z-index: -1;
+    -webkit-filter: blur(10px);
+    filter: blur(20px);
+}
+
+.dowebok {
+    position: absolute;
+    left: 50%;
+    top: 50%;
+    width: 430px;
+    height: 530px;
+    margin: -300px 0 0 -215px;
+    border-radius: 20px;
+    overflow: hidden;
+}
+
+.logo {
+    width: 110px;
+    height: 110px;
+    margin: 40px auto 30px;
+}
+
+.head-image {
+    width: 110px;
+    height: 110px;
+    border-radius: 110px;
+}
+
+.form-item {
+    position: relative;
+    width: 360px;
+    margin: 0 auto;
+    padding-bottom: 20px;
+}
+
+.form-item input {
+    width: 298px;
+    height: 48px;
+    padding-left: 60px;
+    border: 1px solid #fff;
+    border-radius: 25px;
+    font-size: 18px;
+    color: #fff;
+    background-color: transparent;
+    outline: none;
+}
+
+.form-item input:focus {
+    box-shadow: 0 0 15px #fff;
+}
+
+.error {
+    box-shadow: 0 0 15px tomato;
+}
+
+.form-item button {
+    width: 360px;
+    height: 48px;
+    border: 0;
+    border-radius: 25px;
+    font-size: 18px;
+    color: #9a9a9a;
+    outline: none;
+    cursor: pointer;
+    background-color: #fff;
+}
+
+.form-item div input {
+    width: 180px;
+    height: 48px;
+    padding-left: 60px;
+    border: 1px solid #fff;
+    border-radius: 25px;
+    font-size: 18px;
+    color: #fff;
+    background-color: transparent;
+    outline: none;
+}
+
+.form-item div button {
+    width: 98px;
+    height: 48px;
+    padding-left: 50px;
+    border: 1px solid #fff;
+    border-radius: 25px;
+    font-size: 18px;
+    color: #fff;
+    background-color: transparent;
+    outline: none;
+    float: right;
+}
+
+.username {
+    background: url(../media/image/login_user.png) 20px 10px no-repeat;
+}
+
+.email {
+    background: url(../media/image/login_email.png) 20px 10px no-repeat;
+}
+
+.password {
+    background: url(../media/image/login_password.png) 20px 10px no-repeat;
+}
+
+.recode {
+    background: url(../media/image/login_recode.png) 20px 10px no-repeat;
+}
+
+.tip {
+    display: none;
+}
+
+.reg-bar {
+    position: absolute;
+    bottom: 10px;
+    left: 60px;
+    width: 360px;
+    margin: 20px auto 0;
+    font-size: 14px;
+    overflow: hidden;
+}
+
+.reg-bar a {
+    color: #fff;
+    text-decoration: none;
+}
+
+.reg-bar a:hover {
+    text-decoration: underline;
+}
+
+.reg-bar .reg {
+    float: left;
+}
+
+.reg-bar .forget {
+    float: right;
+}
+
+.dowebok ::-webkit-input-placeholder {
+    font-size: 16px;
+    line-height: 1.4;
+    color: #fff;
+}
+
+.dowebok :-moz-placeholder {
+    font-size: 16px;
+    line-height: 1.4;
+    color: #fff;
+}
+
+.dowebok ::-moz-placeholder {
+    font-size: 16px;
+    line-height: 1.4;
+    color: #fff;
+}
+
+.dowebok :-ms-input-placeholder {
+    font-size: 16px;
+    line-height: 1.4;
+    color: #fff;
+}
+
+@media screen and (max-width: 500px) {
+    * {
+        box-sizing: border-box;
+    }
+
+    .dowebok {
+        position: static;
+        width: auto;
+        height: auto;
+        margin: 0 30px;
+        border: 0;
+        border-radius: 0;
+    }
+
+    .logo {
+        margin: 50px auto;
+    }
+
+    .form-item {
+        width: auto;
+    }
+
+    .form-item input, .form-item button, .reg-bar {
+        width: 100%;
+    }
+}
+
+

@@ -1,0 +1,44 @@
+.card-footer button {
+    width: 80px;
+    height: 35px;
+    border-radius: 25px;
+    border: tomato 1px solid;
+    color: tomato;
+    background-color: #ffffff;
+}
+
+.card-footer button:hover {
+    width: 80px;
+    height: 35px;
+    border-radius: 25px;
+    border: tomato 1px solid;
+    color: #ffffff;
+    background-color: rgba(255, 99, 71, 0.8);
+}
+
+.card-footer button:focus {
+    outline: none;
+}
+
+#cardHeader {
+    background-color: rgba(255, 99, 71, 0.7);
+    color: #ffffff;
+    border: rgba(255, 99, 71, 0.7);
+}
+
+.error {
+    box-shadow: 0 0 10px tomato;
+}
+
+.list-group-item.active {
+    z-index: 2;
+    color: #fff;
+    font-weight: bold;
+    background-color: rgba(255, 99, 71, 0.8);
+    border-color: rgba(255, 99, 71, 0.4);
+}
+
+.list-group-item {
+    font-weight: initial;
+}
+

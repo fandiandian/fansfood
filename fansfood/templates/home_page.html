@@ -1,0 +1,99 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}
+    <title>首页 fans-food</title>
+{% endblock %}
+
+
+{# 左侧栏之文章 #}
+{% block food_acticle %}
+    <div style="width: 100%; margin: 30px 0 10px 0">
+        <h5 class="text-monospace" style="text-align:center">
+            <code>&#8672;</code> Random Article <code>&#8674;</code>
+        </h5>
+        <p class="border-bottom"></p>
+    </div>
+    <div class="card-columns">
+        {% for food in random_food %}
+            <div class="card">
+                <a href="{% url 'food:food_article' food.article_id %}">
+                    <img class="card-img-top img-fluid"
+                         src="{{ MEDIA_URL }}{{ food.image }}" alt="Card image cap">
+                </a>
+                <div class="card-body">
+                    <a href="{% url 'food:food_article' food.article_id %}">
+                        <h5 class="card-title">{{ food.name }}</h5>
+                    </a>
+                    <p class="card-text">
+                        <small>{{ food.ingredient_list }}</small>
+                    </p>
+                    <p class="card-text text-right font-weight-normal" style="font-size: 12px">
+                        <small class="mr-1" style="color: tomato; font-size: 16px">{{ food.like }}</small>
+                        人喜欢
+                        <small class="mr-2"></small>
+                        <samll class="mr-1" style="color: tomato; font-size: 16px">{{ food.fav }}</samll>
+                        人收藏
+                    </p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+{# 左侧栏之图片 #}
+{% block food_graph %}
+    <div style="width: 100%; margin: 10px 0; margin-top: 50px">
+        <h5 class="text-monospace" style="text-align:center">
+            <code>&#8672;</code> Random Photo <code>&#8674;</code>
+        </h5>
+        <p class="border-bottom"></p>
+    </div>
+    <div class="card-columns">
+        {% for image in random_image %}
+            <div class="card">
+                <a href="{% url 'food:food_image' image.name %}">
+                    <img class="card-img-top img-fluid" src="{{ MEDIA_URL }}{{ image.image }}" alt="Card image cap">
+                </a>
+                <div class="card-body">
+                    <p class="card-text text-right font-weight-normal" style="font-size: 12px">
+                        <small class="mr-1" style="color: tomato; font-size: 16px">{{ image.like }}</small>
+                        人喜欢
+                        <small class="mr-2"></small>
+                        <samll class="mr-1" style="color: tomato; font-size: 16px">{{ image.fav }}</samll>
+                        人收藏
+                    </p>
+                    <p class="card-text">
+                        Tags:
+                        <small class="text-muted">
+                            {% for tag in image.tags.all %}
+                                {% if forloop.counter < 4 %}
+                                    <span class="mr-1">{{ tag }}</span>
+                                {% endif %}
+                            {% endfor %}
+                            ...
+                        </small>
+                    </p>
+                </div>
+            </div>
+        {% endfor %}
+    </div>
+{% endblock %}
+
+{% block foot %}
+    <hr>
+    <footer class="footer navbar-fixed-bottom" style="margin-top: 20px">
+        <div class="container">
+            <div class="row" style="width:100%; margin: 40px auto 40px">
+                <div class="col-md-2"></div>
+                <div class="col-md-4" style="width: 100%">
+                    <p class="text-center">凡肴网 | fans-food</p>
+                </div>
+                <div class="col-md-4" style="width: 100%">
+                    <p class="text-center">Design by 刘小北 | 广ICP备66666666号-6</p>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+        </div>
+    </footer>
+{% endblock %}

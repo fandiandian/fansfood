@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+
+{% extends "base_login.html" %}
+{% load static %}
+
+<html lang="zh-CN">
+
+{% block css %}
+    <link rel="stylesheet" href="{% static "css/login.css" %}">
+    <style>
+        .recode-image {
+            background: url({{ MEDIA_URL }}{{ recode_image.recode_image_path }}) 23px 9px no-repeat;
+        }
+    </style>
+{% endblock %}
+{% block html_title %}
+    <title>登录 fans-food</title>
+{% endblock %}
+
+
+{% block main %}
+    <div class="wrap dowebok">
+        <div class="logo">
+            <a href="{% url "home_page" %}">
+                <img class="head-image" src="{% static "media/image/login_default.png" %}" alt="logo">
+            </a>
+        </div>
+        <div><h3>用户登录</h3></div>
+        <form id="jsLoginForm">
+            <div class="form-item">
+                <input id="jsUsername" name="username" class="username" type="text"
+                       autocomplete="off" placeholder="邮箱 / 用户名" required>
+            </div>
+            <div class="form-item">
+                <input id="jsPassword" name="password" class="password"
+                       type="password" autocomplete="off" placeholder="登录密码" required>
+            </div>
+            <div class="form-item">
+                <div>
+                    <input id="jsRecode" name="recode" class="recode"
+                           type="text" autocomplete="off" placeholder= "右侧算式的结果" required>
+                    <button type="button" id="jsRecodeImage" class="recode-image"></button>
+                </div>
+            </div>
+            <div class="form-item">
+                <button type="button" id="jsLoginSubmit">登 录</button>
+            </div>
+        </form>
+        <div class="reg-bar">
+            <a class="reg" href="{% url "user:register" %}">立即注册</a>
+            <a class="forget" href="{% url "user:forget_password" %}">忘记密码</a>
+        </div>
+    </div>
+{% endblock %}
+
+{% block js %}
+    <script>
+        // 页面加载完成，如果有后台的消息，自动弹出，显示消息
+        $(document).ready(function(){
+            {% if messages %}
+                {% for message in messages %}
+                    var message = "{{ message }}";
+                    alert(message);
+                {% endfor %}
+            {% endif %}
+        })
+    </script>
+    <script>
+        $(function () {
+            $(document).ready(function () {
+                $('#jsLoginSubmit').on('click', function () {
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: "{% url 'user:login' %}",
+                        data: $('#jsLoginForm').serialize(),
+                        async: true,
+                        beforeSend: function (xhr, settings) {
+                            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                        },
+                        success: function (data) {
+                            // 还原登录框样式
+                            $("#jsRecode").removeClass("error");
+                            $("#jsUsername").removeClass("error");
+                            $("#jsPassword").removeClass("error");
+                            $("#jsRecode").attr({
+                                placeholder: "右侧等式的结果"
+                            });
+                            $("#jsUsername").attr({
+                                placeholder: "邮箱 / 用户名"
+                            });
+                            $("#jsPassword").attr({
+                                placeholder: "登录密码"
+                            });
+                            if (data.status === "fail"){
+                                /* *
+                                * 这里遇到很多的问题：
+                                * 首先是根据返回的 json 数据来调整页面的渲染效果
+                                *   只能通过 js 提供的方法根据 id 和 class 来修改标签的各种属性
+                                *       $("#jsRecode").attr({}) 传入属性的键值对来批量修改
+                                *   ("#jsRecode").val(""); --> 设定标签的值为空
+                                *       无法通过 value: "" 的方式来完成
+                                * 另一个问题：django 的模版并不能识别 js 的变量
+                                *   自能通过占位符的方式来实现
+                                * */
+                                if (data.fail_type === "recode"){
+                                    var path_1 = JSON.parse(data.recode_image).recode_image_path;
+                                    var url_1 = "url({{ MEDIA_URL }}12345) 23px 9px no-repeat"; // 占位符 12345
+                                    url = url_1.replace("12345", path_1);                         // 执行替换
+                                    $(".recode-image").css("background", url);                // 经过转换后 url
+                                    $("#jsRecode").attr({
+                                        placeholder: "计算结果错误",
+                                        class: "recode error",
+                                    });
+                                    $("#jsRecode").val("");
+                                } else if (data.fail_type === "username"){
+                                    var path_2 = JSON.parse(data.recode_image).recode_image_path;
+                                    var url_2 = "url({{ MEDIA_URL }}12345) 23px 9px no-repeat"; // 占位符 12345
+                                    url = url_2.replace("12345", path_2);
+                                    $(".recode-image").css("background", url);                // 经过转换后 url
+                                    $("#jsUsername").attr({
+                                        placeholder: "用户名或邮箱未注册",
+                                        class: "recode error",
+                                    });
+                                    $("#jsUsername").val("");
+                                } else if (data.fail_type === "password"){
+                                    var path_3 = JSON.parse(data.recode_image).recode_image_path;
+                                    var url_3 = "url({{ MEDIA_URL }}12345) 23px 9px no-repeat"; // 占位符 12345
+                                    url = url_3.replace("12345", path_3);
+                                    $(".recode-image").css("background", url);                // 经过转换后 url
+                                    $("#jsPassword").attr({
+                                        placeholder: "用户名与密码不匹配",
+                                        class: "recode error",
+                                    });
+                                    $("#jsPassword").val("");
+                                } else if (data.fail_type === "form"){
+                                    var path_4 = JSON.parse(data.recode_image).recode_image_path;
+                                    var url_4 = "url({{ MEDIA_URL }}12345) 23px 9px no-repeat"; // 占位符 12345
+                                    url = url_4.replace("12345", path_4);
+                                    $(".recode-image").css("background", url);                // 经过转换后 url
+                                    alert("输入的信息有误，请重新输入")
+                                } else if (data.fail_type === "not_active") {
+                                    alert(data.message)
+                                }
+                            } else if (data.status === 'success') {
+                                alert("登录成功！");
+                                location.href = data.url
+                            }
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+    <script>
+        $(function () {
+            $(document).ready(function () {
+                $('#jsRecodeImage').on('click', function () {
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        url: "{% url 'user:flush_recode_image' %}",
+                        async: true,
+                        beforeSend: function (xhr, settings) {
+                            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                        },
+                        success: function (data) {
+                            if (data.status === 'success'){
+                                var path_1 = JSON.parse(data.recode_image).recode_image_path;
+                                var url_1 = "url({{ MEDIA_URL }}12345) 23px 9px no-repeat";   // 占位符 12345
+                                url = url_1.replace("12345", path_1);                         // 执行替换
+                                $(".recode-image").css("background", url);                    // 经过转换后 url
+                            }
+                        }
+                    });
+                });
+            });
+        });
+    </script>
+{% endblock %}
+
+
+</html>

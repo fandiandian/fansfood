@@ -1,0 +1,327 @@
+{% extends 'base_user_center.html' %}
+{% load static %}
+
+
+{% block title %}
+    <title>用户中心 fans-food</title>
+    <style>
+        .form-control.invalid {
+            border-color: #dc3545;
+        }
+
+        .form-control.invalid:focus {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+        }
+    </style>
+{% endblock %}
+
+
+{# 面包屑导航 #}
+{% block bread_crumb_navigation %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item" aria-current="page"></li>
+            <li class="breadcrumb-item"><a href="{% url 'operator:user_center' %}">用户中心</a></li>
+            <li class="breadcrumb-item" aria-current="page">用户消息</li>
+        </ol>
+    </nav>
+{% endblock %}
+
+{% block center_body %}
+    <nav class="nav-fill">
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-item nav-link" id="nav-home-tab"
+               href="{% url 'operator:user_center' %}" role="tab">概览</a>
+            <a class="nav-item nav-link" id="nav-like-tab"
+               href="{% url 'operator:user_like' %}" role="tab">喜欢</a>
+            <a class="nav-item nav-link" id="nav-fav-tab"
+               href="{% url 'operator:user_fav' %}" role="tab">收藏</a>
+            <a class="nav-item nav-link active" id="nav-message-tab"
+               data-toggle="tab" href="#nav-message" role="tab"
+               aria-controls="nav-contact" aria-selected="true">消息</a>
+        </div>
+    </nav>
+    <div class="tab-content mb-5" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-message" role="tabpanel" aria-labelledby="nav-message-tab">
+            <div class="container bg-white rounded-bottom border-top-0 pt-2 pb-2" style="border: #dee2e6 solid 1px">
+                <div class="row mt-4 mb-4">
+                    <div class="col-2 text-center ml-3">
+                        <div class="list-group" id="list-tab" role="tablist">
+                            <a class="list-group-item {% if focus == 'unread' %}active{% endif %}" id="unread-message-list"
+                               data-toggle="list" href="#unread-message" role="tab" aria-controls="unread">未读消息</a>
+                            <a class="list-group-item {% if focus == 'read' %}active{% endif %}" id="read-message-list"
+                               data-toggle="list" href="#read-message" role="tab" aria-controls="read">已读消息</a>
+                        </div>
+                    </div>
+                    <div class="col-9 ml-3">
+                        <div class="tab-content" id="nav-tabContent">
+                            <div class="tab-pane fade {% if focus == 'unread' %}show active{% endif %}"
+                                 id="unread-message" role="tabpanel" aria-labelledby="unread-message-list">
+                                {% if user_unread_page %}
+                                    <div class="row mb-4">
+                                        <div class="col-12 mb-4">
+                                            <div class="rounded" id="accordion-unread">
+                                                {% for unread_message in user_unread_page.object_list %}
+                                                    <div class="card mb-1">
+                                                        <div class="card-header bg-white pb-1 pt-1" id="heading-unread{{ forloop.counter }}">
+                                                            <div class="row">
+                                                                <div class="col-1">
+                                                                    {% if unread_message.readable == 'unread' %}
+                                                                        <img src="{% static 'media/image/unread.png' %}" alt="未读" title="{{ unread_message.readable }}"
+                                                                             class="img-fluid" id="unreadMessageImage{{ unread_message.id }}">
+                                                                    {% endif %}
+                                                                </div>
+                                                                <div class="col-7">
+                                                                    <p class="lead mb-0" style="margin-top: 2px">
+                                                                        {{ unread_message.message_title }}
+                                                                    </p>
+                                                                </div>
+                                                                <div class="col-4 mt-1 text-right">
+                                                                    <small class="mr-4">{{ unread_message.add_time|date:'Y-m-d' }}</small>
+                                                                    <a role="button" data-toggle="collapse" href="#collapse-unread{{ forloop.counter }}"
+                                                                       aria-expanded="false" aria-controls="collapse-unread{{ forloop.counter }}">
+                                                                        <small class="mr-2"
+                                                                               onclick="seeMessage('{% url 'operator:read_message' unread_message.id %}', 'unreadMessageImage{{ unread_message.id }}')">
+                                                                            查看详情
+                                                                        </small>
+                                                                    </a>
+                                                                    <a role="button" href="#delUnreadMessage{{ forloop.counter }}" data-toggle="modal">
+                                                                        <small>删除</small>
+                                                                    </a>
+                                                                    <!-- Modal -->
+                                                                    <div class="modal fade" id="delUnreadMessage{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="delUnreadMessageTitle{{ forloop.counter }}" aria-hidden="true">
+                                                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                                                            <div class="modal-content">
+                                                                                <div class="modal-header">
+                                                                                    <h5 class="modal-title" id="delUnreadMessageTitle{{ forloop.counter }}">
+                                                                                        删除消息</h5>
+                                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                        <span aria-hidden="true">&times;</span>
+                                                                                    </button>
+                                                                                </div>
+                                                                                <div class="modal-body text-center">
+                                                                                    确定要删除消息： {{ unread_message.message_title }}？
+                                                                                </div>
+                                                                                <div class="modal-footer">
+                                                                                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
+                                                                                        取消
+                                                                                    </button>
+                                                                                    <a href="{% url 'operator:del_message' unread_message.id %}">
+                                                                                        <button type="button" class="btn btn-outline-success" id="delUnreadMessage">
+                                                                                            确定
+                                                                                        </button>
+                                                                                    </a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div id="collapse-unread{{ forloop.counter }}" class="collapse"
+                                                             aria-labelledby="heading-unread{{ forloop.counter }}" data-parent="#accordion-unread">
+                                                            <div class="card-body small">
+                                                                {{ unread_message.message_content|linebreaksbr }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-12">
+                                            <nav aria-label="Page navigation mt-3">
+                                                <ul class="pagination justify-content-center">
+                                                    {% if user_unread_page.has_previous %}
+                                                        <li class="page-item">
+                                                            <a class="page-link" href="?{{ user_unread_page.previous_page_number.querystring }}">&laquo;</a>
+                                                        </li>
+                                                    {% else %}
+                                                        <li class="page-item disabled">
+                                                            <a class="page-link disabled">&laquo;</a>
+                                                        </li>
+                                                    {% endif %}
+                                                    {% for unread_page in user_unread_page.pages %}
+                                                        {% if unread_page %}
+                                                            {% ifequal unread_page user_unread_page.number %}
+                                                                <li class="page-item disabled">
+                                                                    <a class="page-link">{{ unread_page }}</a>
+                                                                </li>
+                                                            {% else %}
+                                                                <li class="page-item">
+                                                                    <a class="page-link" href="?{{ unread_page.querystring }}">{{ unread_page }}</a>
+                                                                </li>
+                                                            {% endifequal %}
+                                                        {% else %}
+                                                            {# 如果页面没有分页，则不显示任何内容#}
+                                                            <li class="none"><a href="" class="page">...</a></li>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {% if user_unread_page.has_next %}
+                                                        <li class="page-item">
+                                                            <a class="page-link" href="?{{ user_unread_page.next_page_number.querystring }}">&raquo;</a>
+                                                        </li>
+                                                    {% else %}
+                                                        <li class="page-item disabled">
+                                                            <a class="page-link disabled">&raquo;</a>
+                                                        </li>
+                                                    {% endif %}
+                                                </ul>
+                                            </nav>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <p class="lead ml-2">没有未读消息哦 ...</p>
+                                {% endif %}
+                            </div>
+                            <div class="tab-pane fade {% if focus == 'read' %}show active{% endif %}"
+                                 id="read-message" role="tabpanel" aria-labelledby="read-message-list">
+                                {% if user_read_page %}
+                                    <div class="row">
+                                        <div class="col-12">
+                                            <div class="rounded" id="accordion-read">
+                                                {% for read_message in user_read_page.object_list %}
+                                                    <div class="card mb-1">
+                                                        <div class="card-header bg-white pb-1 pt-1" id="heading-read{{ forloop.counter }}">
+                                                            <div class="row">
+                                                                <div class="col-1">
+                                                                    <img src="{% static 'media/image/read.png' %}"
+                                                                         alt="已读" class="img-fluid" id="readMessageImage">
+                                                                </div>
+                                                                <div class="col-7">
+                                                                    <p class="lead mb-0" style="margin-top: 2px">
+                                                                        {{ read_message.message_title }}
+                                                                    </p>
+                                                                </div>
+                                                                <div class="col-4 mt-1 text-right">
+                                                                    <small class="mr-4">{{ read_message.add_time|date:'Y-m-d' }}</small>
+                                                                    <a role="button" data-toggle="collapse" href="#collapse-read{{ forloop.counter }}"
+                                                                       aria-expanded="false" aria-controls="collapse-read{{ forloop.counter }}">
+                                                                        <small class="mr-2">查看详情</small>
+                                                                    </a>
+                                                                    <a role="button" href="#delReadMessage{{ forloop.counter }}" data-toggle="modal">
+                                                                        <small>删除</small>
+                                                                    </a>
+                                                                    <!-- Modal -->
+                                                                    <div class="modal fade" id="delReadMessage{{ forloop.counter }}" tabindex="-1" role="dialog" aria-labelledby="delReadMessageTitle{{ forloop.counter }}" aria-hidden="true">
+                                                                        <div class="modal-dialog modal-dialog-centered" role="document">
+                                                                            <div class="modal-content">
+                                                                                <div class="modal-header">
+                                                                                    <h5 class="modal-title" id="delReadMessageTitle{{ forloop.counter }}">
+                                                                                        删除消息</h5>
+                                                                                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                        <span aria-hidden="true">&times;</span>
+                                                                                    </button>
+                                                                                </div>
+                                                                                <div class="modal-body text-center">
+                                                                                    确定要删除消息： {{ read_message.message_title }}？
+                                                                                </div>
+                                                                                <div class="modal-footer">
+                                                                                    <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
+                                                                                        取消
+                                                                                    </button>
+                                                                                    <a href="{% url 'operator:del_message' read_message.id %}">
+                                                                                        <button type="button" class="btn btn-outline-success" id="delReadMessage">
+                                                                                            确定
+                                                                                        </button>
+                                                                                    </a>
+                                                                                </div>
+                                                                            </div>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div id="collapse-read{{ forloop.counter }}" class="collapse"
+                                                             aria-labelledby="heading-read{{ forloop.counter }}" data-parent="#accordion-read">
+                                                            <div class="card-body small">
+                                                                {{ read_message.message_content|linebreaksbr }}
+                                                            </div>
+                                                        </div>
+                                                    </div>
+                                                {% endfor %}
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div class="row mt-3">
+                                        <div class="col-12">
+                                            <nav aria-label="Page navigation mt-3">
+                                                <ul class="pagination justify-content-center">
+                                                    {% if user_read_page.has_previous %}
+                                                        <li class="page-item">
+                                                            <a class="page-link" href="?{{ user_read_page.previous_page_number.querystring }}">&laquo;</a>
+                                                        </li>
+                                                    {% else %}
+                                                        <li class="page-item disabled">
+                                                            <a class="page-link disabled">&laquo;</a>
+                                                        </li>
+                                                    {% endif %}
+                                                    {% for read_page in user_read_page.pages %}
+                                                        {% if read_page %}
+                                                            {% ifequal read_page user_read_page.number %}
+                                                                <li class="page-item disabled">
+                                                                    <a class="page-link">{{ read_page }}</a>
+                                                                </li>
+                                                            {% else %}
+                                                                <li class="page-item">
+                                                                    <a class="page-link" href="?{{ read_page.querystring }}">{{ read_page }}</a>
+                                                                </li>
+                                                            {% endifequal %}
+                                                        {% else %}
+                                                            {# 如果页面没有分页，则不显示任何内容#}
+                                                            <li class="none"><a href="" class="page">...</a></li>
+                                                        {% endif %}
+                                                    {% endfor %}
+                                                    {% if user_read_page.has_next %}
+                                                        <li class="page-item">
+                                                            <a class="page-link" href="?{{ user_read_page.next_page_number.querystring }}">&raquo;</a>
+                                                        </li>
+                                                    {% else %}
+                                                        <li class="page-item disabled">
+                                                            <a class="page-link disabled">&raquo;</a>
+                                                        </li>
+                                                    {% endif %}
+                                                </ul>
+                                            </nav>
+                                        </div>
+                                    </div>
+                                {% else %}
+                                    <p class="lead ml-2">已读消息没有已读消息，好奇怪 ...</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block coustomjs %}
+    <script>
+        function seeMessage(url, messageImage) {
+            var imageID = '#' + messageImage;
+            var messageStatus = $(imageID).attr('title');
+            if (messageStatus === 'unread') {
+                $.ajax({
+                    cache: false,
+                    async: true,
+                    type: 'POST',
+                    url: url,
+                    beforeSend: function (xhr, settings) {
+                        xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                    },
+                    success: function (data) {
+                        if (data.status === 'success') {
+                            $(imageID).attr('src', '{% static "media/image/read.png" %}');
+                            $(imageID).attr('title', 'read');
+                        }
+                    }
+                });
+            }
+        }
+    </script>
+{% endblock %}

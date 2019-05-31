@@ -1,0 +1,569 @@
+{% extends 'base_user_center.html' %}
+{% load static %}
+
+
+{% block title %}
+    <title>用户中心 fans-food</title>
+    <style>
+        .form-control.invalid {
+            border-color: #dc3545;
+        }
+
+        .form-control.invalid:focus {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+        }
+        #refreshCaptcha:focus {
+            outline: none;
+        }
+    </style>
+{% endblock %}
+
+
+{# 面包屑导航 #}
+{% block bread_crumb_navigation %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item" aria-current="page"></li>
+            <li class="breadcrumb-item"><a href="{% url 'operator:user_center' %}">用户中心</a></li>
+            <li class="breadcrumb-item" aria-current="page">概览</li>
+        </ol>
+    </nav>
+{% endblock %}
+
+{% block center_body %}
+    <nav class="nav-fill">
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-item nav-link active" id="nav-home-tab"
+               data-toggle="tab" href="#nav-home" role="tab"
+               aria-controls="nav-home" aria-selected="true">概览</a>
+            <a class="nav-item nav-link" id="nav-like-tab" role="tab"
+               href="{% url 'operator:user_like' %}">喜欢</a>
+            <a class="nav-item nav-link" id="nav-fav-tab" role="tab"
+               href="{% url 'operator:user_fav' %}">收藏</a>
+            <a class="nav-item nav-link" id="nav-message-tab" role="tab"
+               href="{% url 'operator:user_message' %}">消息</a>
+        </div>
+    </nav>
+    <div class="tab-content mb-5" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-home" role="tabpanel" aria-labelledby="nav-home-tab">
+            <div class="container bg-white rounded-bottom border-top-0 pt-2 pb-2" style="border: #dee2e6 solid 1px">
+                <div class="row">
+                    <div class="col-3 text-center mt-4">
+                        <div class="col-12">
+                            <h6 class="mt-4 mb-3 lead">用户头像</h6>
+                            <img src="{{ MEDIA_URL }}{{ request.user.head_portrait }}" id="userHeadPortrait"
+                                 alt="用户头像" class="rounded-circle mt-4 mb-4" style="width: 120px; height: 120px">
+                            <br>
+                            <!-- 弹窗 -->
+                            <button type="button" class="btn btn-outline-success mt-4 mb-4"
+                                    data-toggle="modal" data-target="#changeImage">
+                                修改头像
+                            </button>
+                            <!-- Modal -->
+                            <form id="imageUploadForm" enctype="multipart/form-data" autocomplete="off">
+                                <div class="modal fade" id="changeImage" tabindex="-1" role="dialog" aria-labelledby="imageTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="imageTitle">修改用户头像</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div id="imageErrorAlter"></div>
+                                                <div class="custom-file mb-3 mt-3">
+                                                    <input type="file" class="custom-file-input" id="imageFileInput" name="head_portrait">
+                                                    <label class="custom-file-label" for="imageFileInput" id="imageFileLabel">选择文件</label>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" id="cancelImageFileUpload" class="btn btn-outline-secondary" data-dismiss="modal">
+                                                    取消
+                                                </button>
+                                                <button type="button" id="submitImageFileUpload" class="btn btn-outline-secondary" disabled>
+                                                    提交
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                    <div class="col-6 text-center mt-4">
+                        <h6 class="mt-4 mb-4 lead">用户信息</h6>
+                        <form id="changeUserInfoForm" novalidate>
+                            <div class="form-group row">
+                                <label for="nickName" class="col-sm-2 col-form-label">昵 称：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="nickName" placeholder="请出入昵称"
+                                           value="{{ request.user.nick_name }}" required name="nick_name">
+                                    <small id="nickNameHelpBlock" class="form-text text-muted text-left">
+                                        昵称的长度请控制在 30 个字符以内
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <label for="birthday" class="col-sm-2 col-form-label">生 日：</label>
+                                <div class="col-sm-10">
+                                    <input type="date" class="form-control" id="birthday" placeholder="请出入生日"
+                                           value="{{ request.user.birthday|date:'Y-m-d' }}" required name="birthday">
+                                </div>
+                            </div>
+                            <fieldset class="form-group">
+                                <div class="row">
+                                    <legend class="col-form-label col-sm-2 pt-0">性 别：</legend>
+                                    <div class="form-check form-check-inline ml-3">
+                                        <input class="form-check-input" type="radio" name="gender" id="male" value="male"
+                                                {% if request.user.gender == 'male' %} checked {% endif %}>
+                                        <label class="form-check-label" for="male">男</label>
+                                    </div>
+                                    <div class="form-check form-check-inline ml-3">
+                                        <input class="form-check-input" type="radio" name="gender" id="female" value="female"
+                                                {% if request.user.gender == 'female' %} checked {% endif %}>
+                                        <label class="form-check-label" for="female">女</label>
+                                    </div>
+                                    <div class="form-check form-check-inline ml-3">
+                                        <small id="genderHelpInline" class="text-muted text-right">
+                                            默认性别为男性，如需修改请直接点击修改
+                                        </small>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <fieldset disabled>
+                                <div class="form-group row">
+                                    <label for="userEmail" class="col-sm-2 col-form-label">邮 箱：</label>
+                                    <div class="col-sm-10">
+                                        <input type="text" class="form-control" id="userEmail"
+                                               value="{{ request.user.email }}" name="email">
+                                        <small id="emailHelpBlock" class="form-text text-muted text-left">
+                                            此处仅是用于展示，如需修改邮箱，请点击修改邮箱按钮
+                                        </small>
+                                    </div>
+                                </div>
+                            </fieldset>
+                            <div class="form-group row">
+                                <label for="signature" class="col-sm-2 col-form-label">签 名：</label>
+                                <div class="col-sm-10">
+                                    <input type="text" class="form-control" id="signatureInput" placeholder="个性签名"
+                                           value="{{ request.user.signature }}" name="signature">
+                                    <small id="signatureHelpBlock" class="form-text text-muted text-left">
+                                        个性签名的长度请控制在 80 个字符以内
+                                    </small>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-12 small">
+                                    <div class="alert alert-info" role="alert">
+                                        如需修改信息，请在上方的输入框填入新的信息后点击修改按钮即可
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-sm-12">
+                                    <button type="button" class="btn btn-outline-secondary mb-4" disabled
+                                            id="submitChangeUserInfo">
+                                        修改用户信息
+                                    </button>
+                                </div>
+                            </div>
+                        </form>
+                    </div>
+                    <div class="col-3 text-center mt-4">
+                        <h6 class="mt-4 mb-3 lead">密码，邮箱修改</h6>
+                        <div class="col-12">
+                            <button type="button" class="btn btn-outline-success mt-4 mb-4"
+                                    data-toggle="modal" data-target="#changePassword" id="changPasswordButton">
+                                修改密码
+                            </button>
+                            <!-- Modal -->
+                            <form id="changePasswordForm">
+                                <div class="modal fade" id="changePassword" tabindex="-1" role="dialog" aria-labelledby="passwordTitle" aria-hidden="true">
+                                    <div class="modal-dialog modal-dialog-centered" role="document">
+                                        <div class="modal-content">
+                                            <div class="modal-header">
+                                                <h5 class="modal-title" id="passwordTitle">修改用户密码</h5>
+                                                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                    <span aria-hidden="true">&times;</span>
+                                                </button>
+                                            </div>
+                                            <div class="modal-body">
+                                                <div class="form-row">
+                                                    <div class="col-12">
+                                                        <div class="form-group text-left">
+                                                            <label for="password1">新密码：</label>
+                                                            <input type="password" name="password" class="form-control"
+                                                                   id="password1" placeholder="新的密码" required>
+                                                            <small id="password1HelpBlock" class="form-text text-muted text-left">
+                                                                密码长度要求：6-16位，英文字母，数字和特殊符号的组合，特殊符号包括 !#$_%^&*
+                                                            </small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row">
+                                                    <div class="col-12">
+                                                        <div class="form-group text-left">
+                                                            <label for="password2">确认密码：</label>
+                                                            <input type="password" name="password2" class="form-control"
+                                                                   id="password2" placeholder="再次输入新的密码" required>
+                                                            <small id="password2HelpBlock" class="form-text text-muted text-left">
+                                                                请再次输入密码，确保两次输入一致
+                                                            </small>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                                <div class="form-row align-items-center">
+                                                    <div class="col-8">
+                                                        <div class="form-group text-left">
+                                                            <label for="passwordVerifyCode">验证码：</label>
+                                                            <input type="text" id="id_reg_captcha_1" name="captcha_1" required
+                                                                   class="form-control form-control-captcha fl" placeholder="请输入验证码">
+                                                            <small id="captchaHelpBlock" class="form-text text-muted text-left">
+                                                                请输入右侧验证码图片中的字母
+                                                            </small>
+                                                        </div>
+                                                    </div>
+                                                    <div class="col-3">
+                                                        <button class="btn" id="refreshCaptcha" type="button" title="点击更换验证码">
+                                                            <img src="" class="captcha" alt="captcha" id="passwordCaptcha">
+                                                        </button>
+                                                        <input id="id_reg_captcha_0" name="captcha_0" type="hidden" value="">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <div class="modal-footer">
+                                                <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
+                                                    取消
+                                                </button>
+                                                <button type="button" class="btn btn-outline-secondary" id="submitPasswordButton" disabled>
+                                                    提交
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </form>
+                        </div>
+                        <div class="col-12">
+                            <button type="button" class="btn btn-outline-success mt-4 mb-4"
+                                    data-toggle="modal" data-target="#changeEmail">
+                                修改邮箱
+                            </button>
+                            <!-- Modal -->
+                            <div class="modal fade" id="changeEmail" tabindex="-1" role="dialog" aria-labelledby="emailTitle" aria-hidden="true">
+                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                    <div class="modal-content">
+                                        <div class="modal-header">
+                                            <h5 class="modal-title" id="emailTitle">修改用户邮箱</h5>
+                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                <span aria-hidden="true">&times;</span>
+                                            </button>
+                                        </div>
+                                        <div class="modal-body">
+                                            <form>
+                                                <div class="form-group text-left">
+                                                    <label for="newEmail">新邮箱：</label>
+                                                    <input type="email" name="email" class="form-control" required
+                                                           id="newEmail" placeholder="新的邮箱">
+                                                    <small id="emailChangeHelpBlock" class="form-text text-muted text-left">
+                                                        请填入新的邮箱，邮箱只允许英文字母、数字、下划线、英文句号、以及中划线组成
+                                                    </small>
+                                                </div>
+                                                <div class="form-group text-left">
+                                                    <label for="emailVerifyCode">验证码：</label>
+                                                    <input type="text" name="emailCode" class="form-control" required
+                                                           id="emailVerifyCode" placeholder="请输入新邮箱中的验证码">
+                                                    <small id="emailCodeHelpBlock" class="form-text text-muted text-left">
+                                                        请填入新邮箱以获取验证码
+                                                    </small>
+                                                </div>
+                                            </form>
+                                        </div>
+                                        <div class="modal-footer">
+                                            <button type="button" class="btn btn-outline-secondary mr-3" id="getChangeEmailCode" disabled>
+                                                获取验证码
+                                            </button>
+                                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
+                                                取消
+                                            </button>
+                                            <button type="button" class="btn btn-outline-secondary" disabled id="submitChangeEmailButton">
+                                                提交
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+{% endblock %}
+
+{% block coustomjs %}
+    {# 头像上传框 #}
+    <script>
+        // 修改图片上传文件框，显示图片的名字
+        $("#imageFileInput").on("change", function () {
+            var fileName = $(this).val().split("\\").pop();
+            if (fileName.endsWith('.jpg') || fileName.endsWith('.png')) {
+                $(this).siblings("#imageFileLabel").addClass("selected").html(fileName);
+                $('#submitImageFileUpload').removeAttr('disabled');
+                $('#submitImageFileUpload').removeClass('btn-outline-secondary');
+                $('#submitImageFileUpload').addClass('btn-outline-success');
+            } else {
+                var imageError = '<div class="alert alert-warning alert-dismissible fade show" id="imageError" role="alert"\n' +
+                    '                                                     style="font-size: 14px">\n' +
+                    '                                                    <strong>错误</strong> 文件类型类型不符，只支持 jpg 和 png 格式的文件\n' +
+                    '                                                    <button type="button" class="close" data-dismiss="alert" aria-label="Close">\n' +
+                    '                                                        <span aria-hidden="true">&times;</span>\n' +
+                    '                                                    </button>\n' +
+                    '                                                </div>';
+                $('#imageErrorAlter').append(imageError);
+            }
+        });
+    </script>
+    {# 头像上传 ajax #}
+    <script>
+        // ajax 上传文件，并给出结果
+        $('#submitImageFileUpload').on('click', function () {
+            var fs = document.getElementById('imageUploadForm');
+            var form_data = new FormData(fs);
+            // 提交ajax的请求
+            $.ajax({
+                cache: false,
+                url: "{% url 'operator:change_head_portrait' %}",
+                type: 'POST',
+                data: form_data,
+                processData: false,  // tell jquery not to process the data
+                contentType: false, // tell jquery not to set contentType
+                async: true,
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                },
+                success: function (data) {
+                    $('#changeImage').modal('hide');
+                    if (data.status === 'success') {
+                        var image = data.image;
+                        $('#userHeadPortrait').attr('src', image);
+                        $('#userAvatar').attr('src', image);
+                    } else {
+                        alert('头像修改失败，请重试')
+                    }
+                }
+            }); // end ajax
+        });
+    </script>
+    {# 用户信息修改的 js 函数 #}
+    <script>
+        $('#changeUserInfoForm').on('change', function () {
+            $('#submitChangeUserInfo').removeClass('btn-outline-secondary');
+            $('#submitChangeUserInfo').addClass('btn-outline-success');
+            $('#submitChangeUserInfo').removeAttr('disabled');
+            $('#signatureInput').removeClass('invalid');
+            $('#nickName').removeClass('invalid');
+        });
+    </script>
+    {# 用户信息修改的 ajax #}
+    <script>
+        $('#submitChangeUserInfo').on('click', function () {
+            $.ajax({
+                cache: false,
+                url: "{% url 'operator:change_user_info' %}",
+                type: 'POST',
+                data: $('#changeUserInfoForm').serialize(),
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                },
+                success: function (data) {
+                    if (data.status === 'success') {
+                        $('#submitChangeUserInfo').removeClass('btn-outline-success');
+                        $('#submitChangeUserInfo').addClass('btn-outline-secondary');
+                        $('#submitChangeUserInfo').attr("disabled", true);
+                        alert("修改成功");
+                    } else {
+                        $('#submitChangeUserInfo').removeClass('btn-outline-success');
+                        $('#submitChangeUserInfo').addClass('btn-outline-secondary');
+                        $('#submitChangeUserInfo').attr("disabled", true);
+                        var key1 = "nick_name";
+                        var key2 = "birthday";
+                        var key3 = "signature";
+                        if (key1 in data.message) {
+                            $('#nickNameHelpBlock').text(data.message[key1]);
+                            $('#nickName').addClass('invalid');
+                        }
+                        if (key3 in data.message) {
+                            $('#signatureHelpBlock').text(data.message[key3]);
+                            $('#signatureInput').addClass('invalid');
+                        }
+                        alert("修改失败");
+                    }
+                }
+            })
+        });
+    </script>
+    {# 获取验证码的图片的 ajax #}
+    <script>
+        $('#changPasswordButton').on('click', refreshCaptcha);
+        $('#refreshCaptcha').on('click', refreshCaptcha);
+
+        function refreshCaptcha() {
+            $.getJSON("{% url 'operator:refresh_captcha' %}", function (result) {
+                $('#passwordCaptcha').attr('src', result['captcha_image']);
+                $('#id_reg_captcha_0').val(result['captcha_key']);
+            });
+        }
+    </script>
+    {# 密码修改的前端验证，确保两次输入保持一致，密码强度符合要求 #}
+    <script>
+        $(document).ready(function () {
+            $('#password1').on('input', function () {
+                var patt = /^(?![\d]+$)(?![a-zA-Z]+$)(?![!#$%^&*]+$)[\da-zA-Z!#$%_^&*]{6,16}$/;
+                var password1 = $('#password1').val();
+                if ( patt.test(password1) === false) {
+                    $('#password1').addClass('invalid');
+                    $('#password1HelpBlock').text('密码不符合要求，6-16位，英文字母，数字和特殊符号的组合，特殊符号包括 !#$.%^&*')
+                } else {
+                    $('#password1').removeClass('invalid');
+                    $('#password1HelpBlock').text('密码符合要求')
+                }
+            })
+        });
+
+        $(document).ready(function () {
+            $('#password2').on('input', function () {
+                var password1 = $('#password1').val();
+                var password2 = $('#password2').val();
+                if (password1 === password2) {
+                    $('#password2').removeClass('invalid');
+                    $('#password2HelpBlock').text('两次输入的密码一致');
+                    $('#submitPasswordButton').removeClass('btn-outline-secondary');
+                    $('#submitPasswordButton').addClass('btn-outline-success');
+                    $('#submitPasswordButton').removeAttr('disabled', false);
+                } else {
+                    $('#password2').addClass('invalid');
+                    $('#password2HelpBlock').text('两次输入的密码不一致');
+                }
+            })
+        });
+    </script>
+    {# 密码修改的 ajax #}
+    <script>
+        $('#submitPasswordButton').on('click', function () {
+            $.ajax({
+                cache: false,
+                data: $('#changePasswordForm').serialize(),
+                url: "{% url 'operator:change_password' %}",
+                type: 'POST',
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                },
+                success: function (data) {
+                    if (data.status === 'success') {
+                        $('#changePassword').modal('hide');
+                        alert('密码修改成功');
+                        location.href = data.url
+                    } else if (data.status === 'fail') {
+                        if ('captcha' in data.error) {
+                            $('#id_reg_captcha_1').addClass('invalid');
+                            $('#captchaHelpBlock').text('验证码错误');
+                        }
+                        if ('password2' in data.error){
+                            $('#password2').addClass('invalid');
+                            $('#password2HelpBlock').text('两次输入的密码不一致');
+                        }
+                        if ('password' in data.error){
+                            $('#password1').addClass('invalid');
+                            $('#password1HelpBlock').text('密码不符合要求，6-16位，英文字母，数字和特殊符号的组合，特殊符号包括 !#$.%^&*')
+                        }
+                        refreshCaptcha();
+                    }
+                }
+            })
+        });
+    </script>
+    {# 邮箱修改获取验证码 #}
+    <script>
+        $('#newEmail').on('input', function () {
+            var pattern = /^([a-z0-9,!#\$%&'\*\+/=\?\^_`\{\|}~-]+(\.[a-z0-9,!#\$%&'\*\+/=\?\^_`\{\|}~-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*\.([a-z]{2,})){1}(;[a-z0-9,!#\$%&'\*\+/=\?\^_`\{\|}~-]+(\.[a-z0-9,!#\$%&'\*\+/=\?\^_`\{\|}~-]+)*@[a-z0-9-]+(\.[a-z0-9-]+)*\.([a-z]{2,}))*$/;
+            var email = $('#newEmail').val();
+            if (pattern.test(email)) {
+                $('#getChangeEmailCode').removeAttr('disabled');
+                $('#getChangeEmailCode').removeClass('btn-outline-secondary');
+                $('#getChangeEmailCode').addClass('btn-outline-success');
+                $('#newEmail').removeClass('invalid');
+                $('#emailChangeHelpBlock').text('合规的邮箱！');
+            } else {
+                $('#newEmail').addClass('invalid');
+                $('#emailChangeHelpBlock').text('不合规的邮箱，请输入合规的邮箱！');
+            }
+        });
+        $('#getChangeEmailCode').on('click', function () {
+            $.ajax({
+                cache: false,
+                async: true,
+                type: "POST",
+                url: "{% url 'operator:get_email_code' %}",
+                data: {'email': $('#newEmail').val()},
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                },
+                success: function (data) {
+                    if (data.status === 'success') {
+                        $('#emailCodeHelpBlock').text('验证码邮件已发送，请前往新邮箱获取验证码，并填入');
+                        $('#submitChangeEmailButton').removeAttr('disabled');
+                        $('#submitChangeEmailButton').removeClass('btn-outline-secondary');
+                        $('#submitChangeEmailButton').addClass('btn-outline-success');
+                        $('#getChangeEmailCode').attr('disabled', true);
+                        $('#getChangeEmailCode').removeClass('btn-outline-success');
+                        $('#getChangeEmailCode').addClass('btn-outline-secondary');
+                    } else {
+                        if (data.message === 'send') {
+                            alert('抱歉，验证码邮件发送失败，请重新尝试');
+                        } else if (data.message === 'exist') {
+                            $('#newEmail').addClass('invalid');
+                            $('#emailChangeHelpBlock').text('抱歉，填入的新邮箱已被注册');
+                        } else if (data.message === 'invalid') {
+                            $('#newEmail').addClass('invalid');
+                            $('#emailChangeHelpBlock').text('不合规的邮箱，请输入合规的邮箱！');
+                        }
+
+                    }
+                }
+            })
+        });
+        $('#emailVerifyCode').on('input', function () {
+            $('#emailVerifyCode').removeClass('invalid');
+            $('#emailCodeHelpBlock').text('请输入邮件中包含的验证码');
+        })
+    </script>
+    {# 邮箱修改的 ajax #}
+    <script>
+        $('#submitChangeEmailButton').on('click', function () {
+            $.ajax({
+                cache: false,
+                async: true,
+                type: "POST",
+                url: "{% url 'operator:change_email' %}",
+                data: {'email': $('#newEmail').val(), 'email_code': $('#emailVerifyCode').val(),},
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                },
+                success: function (data) {
+                    if (data.status === 'success') {
+                        $('#changeEmail').modal('hide');
+                        $('#userEmail').attr("value", data.email);
+                        alert('邮箱修改成功')
+                    } else {
+                        $('#emailCodeHelpBlock').text(data.message);
+                        $('#emailVerifyCode').addClass('invalid');
+                    }
+                }
+            })
+        });
+    </script>
+{% endblock %}

@@ -1,0 +1,274 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+<html lang="zh-CN">
+<head>
+    <!-- 基础模板 -->
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <!-- bootstrap 的响应式声明和 css 文件 -->
+    <meta name="viewport" content="width=device-width initial-scale=1">
+    <meta name="robots" content="index,follow">
+    <link rel="stylesheet" href="{% static 'css/bootstrap.css' %}">
+    <link rel="stylesheet" href="{% static 'css/custome.css' %}">
+    <link rel="shortcut icon" href="{% static 'media/image/favicon.ico' %}">
+
+    {% block title %}
+        <title>test</title>
+    {% endblock %}
+
+</head>
+<body class="bg-light">
+
+{# 顶部导航 #}
+<nav class="navbar navbar-expand-lg navbar-light bg-white">
+    <a class="navbar-brand ml-4" href="{% url 'home_page' %}">
+        <img style="float: left; width: 201px; height: 42px" src="{% static 'media/image/fansfoodlogo.png' %}" alt="logo">
+    </a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse"
+            data-target="#navbarSupportedContent"
+            aria-controls="navbarSupportedContent"
+            aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav mr-auto">
+            <li class="nav-item {% if focus == 'home' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'home_page' %}">首页<span class="sr-only">(current)</span></a>
+            </li>
+            <li class="nav-item"><a class="nav-link disabled" href="javascript:void(0)">|</a></li>
+            <li class="nav-item {% if focus == 'article' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'food:food_ranking' %}">美食排行榜</a>
+            </li>
+            <li class="nav-item"><a class="nav-link disabled" href="javascript:void(0)">|</a></li>
+            <li class="nav-item {% if focus == 'image' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'food:food_image_rank' %}">美食图片</a>
+            </li>
+            <li class="nav-item"><a class="nav-link disabled" href="javascript:void(0)">|</a></li>
+            <li class="nav-item {% if focus == 'message' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'message' %}">留言</a>
+            </li>
+            <li class="nav-item"><a class="nav-link disabled" href="javascript:void(0)">|</a></li>
+            <li class="nav-item {% if focus == 'about' %}active{% endif %}">
+                <a class="nav-link" href="{% url 'about' %}">关于</a>
+            </li>
+        </ul>
+    </div>
+    <div class="collapse navbar-collapse mr-4" id="navbarSupportedContent">
+        <ul class="navbar-nav ml-auto">
+            {# 判断用户是否登录 #}
+            {% if not request.user.is_authenticated %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'user:login' %}">登录<span class="sr-only">(current)</span></a>
+                </li>
+                <li class="nav-item"><a class="nav-link disabled" href="javascript:void(0)">|</a></li>
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'user:register' %}">注册</a>
+                </li>
+            {% else %}
+                <li class="nav-item dropdown mr-2 hover">
+                    <button type="button" class="mr-2" id="jsUploadFoodArticle">
+                        上传美食文章
+                    </button>
+                </li>
+                <li class="nav-item dropdown mr-2 hover">
+                    <a class="nav-link dropdown-toggle" href="#"
+                       id="navbarDropdown" role="button" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        <img src="{% static 'media/image/message_no_1.png' %}" alt="消息"
+                             style="width: 32px; height: 32px; border-radius: 16px" class="hover" id="jsMessageImage">
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right mt-0 rounded-0 border-0" aria-labelledby="dropdownMenuLink">
+                        <a class="dropdown-item disabled" href="#" id="jsMessageTitle">没有新的消息</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'operator:user_message' %}">消息中心</a>
+                    </div>
+                </li>
+                <li class="nav-item dropdown hover">
+                    <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown"
+                       aria-haspopup="true" aria-expanded="false">
+                        <img src="{{ MEDIA_URL }}{{ request.user.head_portrait }}" alt="用户头像"
+                             style="width: 32px; height: 32px; border-radius: 16px" class="hover">
+                    </a>
+                    <div class="dropdown-menu dropdown-menu-right mt-0 rounded-0 border-0" aria-labelledby="dropdownMenuLink">
+                        <a class="dropdown-item disabled" href="#">嗨！{{ request.user.nick_name }}</a>
+                        <div class="dropdown-divider"></div>
+                        <a class="dropdown-item" href="{% url 'operator:user_center' %}">
+                            个人中心
+                        </a>
+                        <a class="dropdown-item" href="{% url 'user:logout' %}">安全退出</a>
+                    </div>
+                </li>
+
+            {% endif %}
+        </ul>
+    </div>
+</nav>
+
+{# 页面主体 #}
+<div class="container" style="margin-top: 20px">
+    <div class="row">
+        <div class="col-md-8">
+            {# 面包屑导航 #}
+            {% block bread_crumb_navigation %}
+            {% endblock %}
+            {# 美食文章 #}
+            {% block food_acticle %}
+            {% endblock %}
+            {# 美食图片 #}
+            {% block food_graph %}
+            {% endblock %}
+        </div>
+        <div class="col-md-4" style="margin-top: 20px">
+            {# 右侧栏 #}
+            {% block right_auxiliary_bar %}
+                {# 搜索栏 #}
+                <div style="width: 100%; margin: 10px 0;">
+                    <h5 class="text-monospace" style="text-align:center">
+                        <code>&#8672;</code> Search <code>&#8674;</code>
+                    </h5>
+                    <p class="border-bottom"></p>
+                </div>
+                <div class="row" style="margin: 10px 0;">
+                    <form action="{% url "food:search" %}" method="GET" class="form-inline" style="width: 100%;">
+                        {% csrf_token %}
+                        <div style="margin: 0 0 10px 70px">
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="foodArticle" name="type" class="custom-control-input" value="美食文章" checked>
+                                <label class="custom-control-label" for="foodArticle">美食文章</label>
+                            </div>
+                            <div class="custom-control custom-radio custom-control-inline">
+                                <input type="radio" id="foodImage" name="type" class="custom-control-input" value="美食图片">
+                                <label class="custom-control-label" for="foodImage">美食图片</label>
+                            </div>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="text" name="keyword" class="form-control border-info" placeholder="你想要搜索点什么呢" required>
+                            <div class="input-group-append">
+                                <button class="btn btn-info" type="submit">Go</button>
+                            </div>
+                        </div>
+                    </form>
+                </div>
+                {# 热门文章 #}
+                <div style="width: 100%; margin: 10px 0;">
+                    <h5 class="text-monospace" style="text-align:center;">
+                        <code>&#8672;</code> Popular Food <code>&#8674;</code>
+                    </h5>
+                    <p class="border-bottom"></p>
+                </div>
+                {% for food in popular_food %}
+                    <div class="card border-light mb-3" style="width: 80%; margin: 0 auto;">
+                        <a href="{% url 'food:food_article'  food.article_id %}">
+                            <div class="card-header">{{ food.name }}</div>
+                        </a>
+                        <div class="card-body" style="padding: 5px">
+                            <a href="{% url 'food:food_article'  food.article_id %}">
+                                <img class="w-100 article-img img-fluid" src="
+                                        {{ MEDIA_URL }}{{ food.image }}" alt="test">
+                            </a>
+                        </div>
+                        <div class="card-footer text-muted" style="font-size: 14px">
+                            <span style="color: tomato; font-size: 20px">{{ food.like }}&nbsp;</span>人喜欢
+                            &nbsp;&nbsp;&nbsp;&nbsp;
+                            <span style="color: tomato; font-size: 20px">{{ food.fav }}&nbsp;</span>人收藏
+                        </div>
+                    </div>
+                {% endfor %}
+            {% endblock %}
+        </div>
+        <div class="clearfix"></div>
+    </div>
+</div>
+<div id="page"></div>
+{# 页脚 #}
+{% block foot %}
+    <hr>
+    <footer class="footer navbar-fixed-bottom" style="margin-top: 20px">
+        <div class="container">
+            <div class="row" style="width:100%; margin: 40px auto 40px">
+                <div class="col-md-2"></div>
+                <div class="col-md-4" style="width: 100%">
+                    <p class="text-center">凡肴网 | fans-food</p>
+                </div>
+                <div class="col-md-4" style="width: 100%">
+                    <p class="text-center">Design by 刘小北 | 广ICP备66666666号-6</p>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+        </div>
+    </footer>
+{% endblock %}
+
+<!-- bootstrap 依赖的 js 文件 -->
+<script type="text/javascript" src="{% static 'js/jquery-3.4.0.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/popper.min.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/bootstrap.min.js' %}"></script>
+<!-- vue 的 js 文件 -->
+<!-- 写明 type 类型文件，一开始的时候没写，后来写错了，都导致了 vue is not defined 的错误 -->
+<script type="text/javascript" src="{% static 'js/vue.min.js' %}"></script>
+{% comment %}
+「html」页面使用了「ajax」进行异步数据的请求与响应时，会产生「403」错误。经查询，「django」的官方提供以解决方案
+将官方给出的代码保存到一个「js文件」中，并在「html」页面中导入
+记得一定要在加载完「jQuery」之后加载
+{% endcomment %}
+<script type="text/javascript" src="{% static 'js/crsf_ajax.js' %}"></script>
+<script type="text/javascript" src="{% static 'js/custome.js' %}"></script>
+<script>
+    $(document).ready(function () {
+        var logged = '{{ request.user.is_authenticated }}';
+        console.log(logged);
+        if (logged === "True") {
+            $.ajax({
+                cache: false,
+                type: "GET",
+                async: true,
+                url: "{% url 'operator:get_user_message' %}",
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                },
+                success: function (data) {
+                    if (data.status === 'success') {
+                        if (data.counter > 0) {
+                            var image = "{% static 'media/image/message_1.png' %}";
+                            var message = '你有' + data.counter + '条未读消息';
+                            $('#jsMessageImage').attr('src', image);
+                            $('#jsMessageTitle').text(message)
+                        } else {
+                            return false
+                        }
+                    }
+                }
+            })
+        } else {
+            return false
+        }
+    })
+</script>
+<script>
+    $(document).ready(function () {
+        $('#jsUploadFoodArticle').on('click', function () {
+            $.ajax({
+                cache: false,
+                async: true,
+                type: "POST",
+                url: "{% url 'operator:upload_food_article' %}",
+                beforeSend: function (xhr, settings) {
+                    xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                },
+                success: function (data) {
+                    if (data.status === 'success') {
+                        location.href = data.url
+                    } else {
+                        alert('操作失败，请稍后再试')
+                    }
+                }
+            })
+        })
+    })
+</script>
+{% block customerjs %}
+{% endblock %}
+</body>
+</html>

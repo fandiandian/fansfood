@@ -1,0 +1,293 @@
+{% extends 'base_user_center.html' %}
+{% load static %}
+
+
+{% block title %}
+    <title>用户中心 fans-food</title>
+    <style>
+        .form-control.invalid {
+            border-color: #dc3545;
+        }
+
+        .form-control.invalid:focus {
+            border-color: #dc3545;
+            box-shadow: 0 0 0 0.2rem rgba(220, 53, 69, 0.25);
+        }
+    </style>
+{% endblock %}
+
+
+{# 面包屑导航 #}
+{% block bread_crumb_navigation %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item" aria-current="page"></li>
+            <li class="breadcrumb-item"><a href="{% url 'operator:user_center' %}">用户中心</a></li>
+            <li class="breadcrumb-item" aria-current="page">用户喜欢</li>
+        </ol>
+    </nav>
+{% endblock %}
+
+{% block center_body %}
+    <nav class="nav-fill">
+        <div class="nav nav-tabs" id="nav-tab" role="tablist">
+            <a class="nav-item nav-link" id="nav-home-tab"
+               href="{% url 'operator:user_center' %}" role="tab">概览</a>
+            <a class="nav-item nav-link active" id="nav-like-tab"
+               data-toggle="tab" href="#nav-like" role="tab"
+               aria-controls="nav-profile" aria-selected="true">喜欢</a>
+            <a class="nav-item nav-link" id="nav-fav-tab"
+               href="{% url 'operator:user_fav' %}" role="tab">收藏</a>
+            <a class="nav-item nav-link" id="nav-message-tab"
+               href="{% url 'operator:user_message' %}" role="tab">消息</a>
+        </div>
+    </nav>
+    <div class="tab-content mb-5" id="nav-tabContent">
+        <div class="tab-pane fade show active" id="nav-like" role="tabpanel" aria-labelledby="nav-like-tab">
+            <div class="container bg-white rounded-bottom border-top-0 pt-2 pb-2" style="border: #dee2e6 solid 1px">
+                <div class="row mt-4 mb-4">
+                    <div class="col-2 text-center ml-3">
+                        <div class="list-group" id="list-tab" role="tablist">
+                            <a class="list-group-item {% if focus == 'food_article' %}active{% endif %}" id="list-article-list"
+                               data-toggle="list" href="#list-article" role="tab" aria-controls="article">喜欢的文章</a>
+                            <a class="list-group-item {% if focus == 'food_image' %}active{% endif %}" id="list-image-list"
+                               data-toggle="list" href="#list-image" role="tab" aria-controls="image">喜欢的图片</a>
+                        </div>
+                    </div>
+                    <div class="col-9">
+                        <div class="tab-content" id="nav-tabContent">
+                            <div class="tab-pane fade {% if focus == 'food_article' %}show active{% endif %}"
+                                 id="list-article" role="tabpanel" aria-labelledby="list-article-list">
+                                {% if user_like_article_page %}
+                                    <div class="card-columns mb-3">
+                                        {% for food in user_like_article_page.object_list %}
+                                            <div class="card">
+                                                <a href="{% url 'food:food_article' food.article_id %}">
+                                                    <img class="card-img-top img-fluid"
+                                                         src="{{ MEDIA_URL }}{{ food.image }}" alt="Card image cap">
+                                                </a>
+                                                <div class="card-body">
+                                                    <h5 class="card-title">{{ food.name }}</h5>
+                                                    <p class="card-text">
+                                                        <small>{{ food.ingredient_list }}</small>
+                                                    </p>
+                                                    <div class="row">
+                                                        <div class="col-6 font-weight-normal mt-1">
+                                                            <button type="button" class="btn btn-outline-secondary"
+                                                                    data-toggle="modal" data-target="#delFoodLike{{ forloop.counter }}">
+                                                                取消喜欢
+                                                            </button>
+                                                            <!-- Modal -->
+                                                            <div class="modal fade" id="delFoodLike{{ forloop.counter }}" tabindex="-1"
+                                                                 role="dialog" aria-labelledby="imageTitle" aria-hidden="true">
+                                                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title" id="imageTitle">
+                                                                                取消喜欢</h5>
+                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            <div class="custom-file mb-3 mt-3">
+                                                                                是否取消对< {{ food.name }} >的喜欢？
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
+                                                                                取消
+                                                                            </button>
+                                                                            <a href="{% url 'operator:del_like' food.article_id %}">
+                                                                                <button type="button" class="btn btn-outline-success">
+                                                                                    是的
+                                                                                </button>
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <p class="card-text text-right font-weight-normal" style="font-size: 12px">
+                                                                <small class="mr-1" style="color: tomato; font-size: 16px">{{ food.like }}</small>
+                                                                人喜欢
+                                                            </p>
+                                                            <p class="card-text text-right font-weight-normal" style="font-size: 12px; margin-top: -20px;">
+                                                                <samll class="mr-1" style="color: tomato; font-size: 16px">{{ food.fav }}</samll>
+                                                                人收藏
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <nav aria-label="Page navigation mt-3">
+                                        <ul class="pagination justify-content-center">
+                                            {% if user_like_article_page.has_previous %}
+                                                <li class="page-item">
+                                                    <a class="page-link" href="?{{ user_like_article_page.previous_page_number.querystring }}">&laquo;</a>
+                                                </li>
+                                            {% else %}
+                                                <li class="page-item disabled">
+                                                    <a class="page-link disabled">&laquo;</a>
+                                                </li>
+                                            {% endif %}
+                                            {% for page in user_like_article_page.pages %}
+                                                {% if page %}
+                                                    {% ifequal page user_like_article_page.number %}
+                                                        <li class="page-item disabled">
+                                                            <a class="page-link">{{ page }}</a>
+                                                        </li>
+                                                    {% else %}
+                                                        <li class="page-item">
+                                                            <a class="page-link article_page" href="?{{ page.querystring }}">{{ page }}</a>
+                                                        </li>
+                                                    {% endifequal %}
+                                                {% else %}
+                                                    {# 如果页面没有分页，则不显示任何内容#}
+                                                    <li class="none"><a href="" class="page">...</a></li>
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% if user_like_article_page.has_next %}
+                                                <li class="page-item">
+                                                    <a class="page-link" href="?{{ user_like_article_page.next_page_number.querystring }}">&raquo;</a>
+                                                </li>
+                                            {% else %}
+                                                <li class="page-item disabled">
+                                                    <a class="page-link disabled">&raquo;</a>
+                                                </li>
+                                            {% endif %}
+                                        </ul>
+                                    </nav>
+                                {% else %}
+                                    <p class="lead ml-2">你还没有任何喜欢的文章哦！赶紧去找找吧 ...</p>
+                                {% endif %}
+                            </div>
+                            <div class="tab-pane fade {% if focus == 'food_image' %}show active{% endif %}"
+                                 id="list-image" role="tabpanel" aria-labelledby="list-image-list">
+                                {% if user_like_image_page %}
+                                    <div class="card-columns mb-3">
+                                        {% for image in user_like_image_page.object_list %}
+                                            <div class="card">
+                                                <a href="{% url 'food:food_image' image.name %}">
+                                                    <img class="card-img-top img-fluid"
+                                                         src="{{ MEDIA_URL }}{{ image.image }}" alt="Card image cap">
+                                                </a>
+                                                <div class="card-body">
+                                                    <p class="card-text">
+                                                        Tags:
+                                                        <small class="text-muted">
+                                                            {% for tag in image.tags.all %}
+                                                                {% if forloop.counter < 4 %}
+                                                                    <span class="mr-1">{{ tag }}</span>
+                                                                {% endif %}
+                                                            {% endfor %}
+                                                            ...
+                                                        </small>
+                                                    </p>
+                                                    <div class="row">
+                                                        <div class="col-6 font-weight-normal mt-1">
+                                                            <button type="button" class="btn btn-outline-secondary"
+                                                                    data-toggle="modal" data-target="#delImageLike{{ forloop.counter }}">
+                                                                取消喜欢
+                                                            </button>
+                                                            <!-- Modal -->
+                                                            <div class="modal fade" id="delImageLike{{ forloop.counter }}" tabindex="-1"
+                                                                 role="dialog" aria-labelledby="imageTitle" aria-hidden="true">
+                                                                <div class="modal-dialog modal-dialog-centered" role="document">
+                                                                    <div class="modal-content">
+                                                                        <div class="modal-header">
+                                                                            <h5 class="modal-title" id="imageTitle">
+                                                                                取消喜欢</h5>
+                                                                            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                                                                                <span aria-hidden="true">&times;</span>
+                                                                            </button>
+                                                                        </div>
+                                                                        <div class="modal-body">
+                                                                            <div class="custom-file mb-3 mt-3">
+                                                                                是否取消对该图片的喜欢？
+                                                                            </div>
+                                                                        </div>
+                                                                        <div class="modal-footer">
+                                                                            <button type="button" class="btn btn-outline-secondary" data-dismiss="modal">
+                                                                                取消
+                                                                            </button>
+                                                                            <a href="{% url 'operator:del_like' image.name %}">
+                                                                                <button type="button" class="btn btn-outline-success">
+                                                                                    是的
+                                                                                </button>
+                                                                            </a>
+                                                                        </div>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                        </div>
+                                                        <div class="col-6">
+                                                            <p class="card-text text-right font-weight-normal" style="font-size: 12px">
+                                                                <small class="mr-1" style="color: tomato; font-size: 16px">{{ image.like }}</small>
+                                                                人喜欢
+                                                            </p>
+                                                            <p class="card-text text-right font-weight-normal" style="font-size: 12px; margin-top: -20px;">
+                                                                <samll class="mr-1" style="color: tomato; font-size: 16px">{{ image.fav }}</samll>
+                                                                人收藏
+                                                            </p>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        {% endfor %}
+                                    </div>
+                                    <nav aria-label="Page navigation mt-3">
+                                        <ul class="pagination justify-content-center">
+                                            {% if user_like_image_page.has_previous %}
+                                                <li class="page-item">
+                                                    <a class="page-link" href="?{{ user_like_image_page.previous_page_number.querystring }}">&laquo;</a>
+                                                </li>
+                                            {% else %}
+                                                <li class="page-item disabled">
+                                                    <a class="page-link disabled">&laquo;</a>
+                                                </li>
+                                            {% endif %}
+                                            {% for image_page in user_like_image_page.pages %}
+                                                {% if image_page %}
+                                                    {% ifequal image_page user_like_image_page.number %}
+                                                        <li class="page-item disabled">
+                                                            <a class="page-link">{{ image_page }}</a>
+                                                        </li>
+                                                    {% else %}
+                                                        <li class="page-item">
+                                                            <a class="page-link" href="?{{ image_page.querystring }}">{{ image_page }}</a>
+                                                        </li>
+                                                    {% endifequal %}
+                                                {% else %}
+                                                    {# 如果页面没有分页，则不显示任何内容#}
+                                                    <li class="none"><a href="" class="page">...</a></li>
+                                                {% endif %}
+                                            {% endfor %}
+                                            {% if user_like_image_page.has_next %}
+                                                <li class="page-item">
+                                                    <a class="page-link" href="?{{ user_like_image_page.next_page_number.querystring }}">&raquo;</a>
+                                                </li>
+                                            {% else %}
+                                                <li class="page-item disabled">
+                                                    <a class="page-link disabled">&raquo;</a>
+                                                </li>
+                                            {% endif %}
+                                        </ul>
+                                    </nav>
+                                {% else %}
+                                    <p class="lead ml-2">你还没有任何喜欢的图片哦！赶紧去找找吧 ...</p>
+                                {% endif %}
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+{% block coustomjs %}
+{% endblock %}

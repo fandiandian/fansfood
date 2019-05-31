@@ -1,0 +1,176 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}
+    <title>美食图片 fans-food</title>
+{% endblock %}
+
+
+{# 面包屑导航 #}
+{% block bread_crumb_navigation %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page"></li>
+            <li class="breadcrumb-item"><a href="{% url 'home_page' %}">首页</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'food:food_image_rank' %}">美食图片</a></li>
+        </ol>
+    </nav>
+{% endblock %}
+{# 左侧栏 #}
+{% block food_graph %}
+    <div style="margin: 10px 0">
+        <hr>
+        <img src="{{ MEDIA_URL }}{{ image.image }}" class="img-fluid" alt="Responsive image" style="margin: 10px 0">
+        <hr>
+        <div class="row">
+            <div class="col-6">
+                <ul class="list-inline">
+                    <li class="list-inline-item">
+                        收藏与分享：
+                    </li>
+                    <li class="list-inline-item" id="addLike">
+                        <img {% if like_status == 'yes' %}
+                            src="{% static 'media/image/like_1.png' %}" title="已喜欢"
+                        {% else %}
+                            src="{% static 'media/image/unlike_1.png' %}" title="点击喜欢"
+                        {% endif %}
+                            alt="喜欢" class="like-fav" id="likeImage">
+                        <input type="hidden" id="status-of-like" value="{{ like_status }}" class="hide">
+                    </li>
+                    <li class="list-inline-item" id="addFav" title="收藏">
+                        <img {% if fav_status == 'yes' %}
+                            src="{% static 'media/image/fav_1.png' %}" title="已收藏"
+                        {% else %}
+                            src="{% static 'media/image/unfav_1.png' %}" title="点击收藏"
+                        {% endif %}
+                            alt="收藏" class="like-fav" id="favImage">
+                        <input type="hidden" id="status-of-fav"
+                               value="{{ fav_status }}">
+                    </li>
+                </ul>
+            </div>
+            <p class="col-6 text-right" style="color: gray; font-size: 14px">
+                <span style="color: tomato; font-size: 22px">{{ image.like }}&nbsp;</span>人喜欢
+                &nbsp;&nbsp;&nbsp;&nbsp;
+                <span style="color: tomato; font-size: 22px">{{ image.fav }}&nbsp;</span>人收藏
+            </p>
+        </div>
+        <p>
+            <span>
+                tags:&nbsp;
+                <small class="text-muted">
+                    {% for tag in image.tags.all %}
+                        <a href="{% url 'food:tag_image' tag %}" class="mr-1">
+                            <span>{{ tag }}</span>
+                        </a>
+                    {% endfor %}
+                </small>
+            </span>
+        </p>
+    </div>
+{% endblock %}
+
+{% block foot %}
+    <hr>
+    <footer class="footer navbar-fixed-bottom" style="margin-top: 20px">
+        <div class="container">
+            <div class="row" style="width:100%; margin: 40px auto 40px">
+                <div class="col-md-2"></div>
+                <div class="col-md-4" style="width: 100%">
+                    <p class="text-center">凡肴网 | fans-food</p>
+                </div>
+                <div class="col-md-4" style="width: 100%">
+                    <p class="text-center">Design by 刘小北 | 广ICP备66666666号-6</p>
+                </div>
+                <div class="col-md-2"></div>
+            </div>
+        </div>
+    </footer>
+{% endblock %}
+
+{% block customerjs %}
+    <script>
+        $(document).ready(function () {
+            $('#addLike').on('click', function () {
+                if ($('#status-of-like').val() === 'unsigned') {
+                    alert('用户未登录，无法操作，请前往登录页面登录后再操作');
+                    return false
+                } else {
+                    console.log(1);
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        data: {
+                            "status": $('#status-of-like').val(),
+                            "id": '{{image.name}}',
+                            "type": "food_image"
+                        },
+                        url: "{% url 'operator:add_like' %}",
+                        beforeSend: function (xhr, settings) {
+                            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                        },
+                        success: function (data) {
+                            if (data.status === 'success') {
+                                if (data.like_status === 'yes') {
+                                    var likeImage = '{% static 'media/image/like_1.png' %}';
+                                    $('#likeImage').attr('src', likeImage);
+                                    $('#likeImage').attr('title', '已喜欢');
+                                    $('#status-of-like').val(data.like_status);
+                                } else if (data.like_status === 'no') {
+                                    var unlikeImage = '{% static 'media/image/unlike_1.png' %}';
+                                    $('#likeImage').attr('src', unlikeImage);
+                                    $('#likeImage').attr('title', '点击喜欢');
+                                    $('#status-of-like').val(data.like_status);
+                                }
+                            } else {
+                                alert("操作失败，请稍后进行尝试");
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+    <script>
+        $(document).ready(function () {
+            $('#addFav').on('click', function () {
+                if ($('#status-of-fav').val() === 'unsigned') {
+                    alert('用户未登录，无法操作，请前往登录页面登录后再操作');
+                    return false
+                } else {
+                    $.ajax({
+                        cache: false,
+                        type: "POST",
+                        data: {
+                            "status": $('#status-of-fav').val(),
+                            "id": '{{image.name}}',
+                            "type": "food_image"
+                        },
+                        url: "{% url 'operator:add_fav' %}",
+                        beforeSend: function (xhr, settings) {
+                            xhr.setRequestHeader("X-CSRFToken", "{{ csrf_token }}");
+                        },
+                        success: function (data) {
+                            if (data.status === 'success') {
+                                if (data.fav_status === 'yes') {
+                                    var favImage = '{% static 'media/image/fav_1.png' %}';
+                                    $('#favImage').attr('src', favImage);
+                                    $('#favImage').attr('title', '已收藏');
+                                    $('#status-of-fav').val(data.fav_status);
+                                } else if (data.fav_status === 'no') {
+                                    var unfavImage = '{% static 'media/image/unfav_1.png' %}';
+                                    $('#favImage').attr('src', unfavImage);
+                                    $('#favImage').attr('title', '点击收藏');
+                                    $('#status-of-fav').val(data.fav_status);
+                                }
+                            } else {
+                                alert(data.message);
+                            }
+                        }
+                    });
+                }
+            });
+        });
+    </script>
+{% endblock %}

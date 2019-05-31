@@ -1,0 +1,91 @@
+{% extends 'base.html' %}
+{% load static %}
+
+
+{% block title %}
+    <title>美食排行榜 fans-food</title>
+{% endblock %}
+
+
+{# 面包屑导航 #}
+{% block bread_crumb_navigation %}
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item active" aria-current="page"></li>
+            <li class="breadcrumb-item"><a href="{% url 'home_page' %}">首页</a></li>
+            <li class="breadcrumb-item active" aria-current="page">美食排行榜</li>
+        </ol>
+    </nav>
+{% endblock %}
+{# 左侧栏 #}
+{% block food_acticle %}
+    {% if message %}
+        <div class="card-columns">
+            {% for food in food_list.object_list %}
+                <div class="card">
+                    <a href="{% url 'food:food_article' food.article_id %}">
+                        <img class="card-img-top img-fluid"
+                             src="{{ MEDIA_URL }}{{ food.image }}" alt="Card image cap">
+                    </a>
+                    <div class="card-body">
+                        <a href="{% url 'food:food_article' food.article_id %}">
+                            <h5 class="card-title">{{ food.name }}</h5>
+                        </a>
+                        <p class="card-text">
+                            <small>{{ food.ingredient_list }}</small>
+                        </p>
+                        <p class="card-text text-right font-weight-normal" style="font-size: 12px">
+                            <small class="mr-1" style="color: tomato; font-size: 16px">{{ food.like }}</small>
+                            人喜欢
+                            <small class="mr-2"></small>
+                            <samll class="mr-1" style="color: tomato; font-size: 16px">{{ food.fav }}</samll>
+                            人收藏
+                        </p>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        {# 分页 #}
+        <nav aria-label="Page navigation example" style="margin-top: 30px">
+            <ul class="pagination justify-content-center">
+                {% if food_list.has_previous %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{{ food_list.previous_page_number.querystring }}">&laquo;</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link" href="#">&laquo;</a>
+                    </li>
+                {% endif %}
+                {% for page in food_list.pages %}
+                    {% if page %}
+                        {% ifequal page food_list.number %}
+                            <li class="page-item disabled">
+                                <a class="page-link">{{ page }}</a>
+                            </li>
+                        {% else %}
+                            <li class="page-item">
+                                <a class="page-link" href="?{{ page.querystring }}">{{ page }}</a>
+                            </li>
+                        {% endifequal %}
+                    {% else %}
+                        {# 如果页面没有分页，则不显示任何内容#}
+                        <li class="none"><a href="" class="page">...</a></li>
+                    {% endif %}
+                {% endfor %}
+                {% if food_list.has_next %}
+                    <li class="page-item">
+                        <a class="page-link" href="?{{ food_list.next_page_number.querystring }}">&raquo;</a>
+                    </li>
+                {% else %}
+                    <li class="page-item disabled">
+                        <a class="page-link disabled" href="#">&raquo;</a>
+                    </li>
+                {% endif %}
+            </ul>
+        </nav>
+    {% else %}
+        <h4 class="h4 text-center">没有搜索结果，请更换搜索关键词</h4>
+    {% endif %}
+
+{% endblock %}

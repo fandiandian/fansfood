@@ -1,0 +1,11 @@
+.list-group-item.active {
+    z-index: 2;
+    color: #fff;
+    font-weight: bold;
+    background-color: rgba(255, 99, 71, 0.8);
+    border-color: rgba(255, 99, 71, 0.4);
+}
+
+.list-group-item {
+    font-weight: initial;
+}

@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+
+{% load static %}
+
+<html lang="zh-CN">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <link rel="shortcut icon" href="{% static 'media/image/favicon.ico' %}">
+    {% block html_title %}
+        <title></title>
+    {% endblock %}
+    {% block css %}
+    {% endblock %}
+
+
+</head>
+<body>
+
+    {# 页面主体 #}
+    {% block main %}
+    {% endblock %}
+
+    <script src="{% static "js/jquery-3.4.0.min.js" %}"></script>
+
+    {# 页面脚本 #}
+    {% block js %}
+    {% endblock %}
+
+    {% comment %}
+    「html」页面使用了「ajax」进行异步数据的请求与响应时，会产生「403」错误。经查询，「django」的官方提供以解决方案
+    将官方给出的代码保存到一个「js文件」中，并在「html」页面中导入
+    记得一定要在加载完「jQuery」之后加载
+    {% endcomment %}
+    <script type="text/javascript" src="{% static 'js/crsf_ajax.js' %}"></script>
+</body>
+</html>

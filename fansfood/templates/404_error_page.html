@@ -1,0 +1,40 @@
+{# 这里要加 html5 的声明标签，否则样式会加载出现问题 #}
+{# 感觉是 html4 时代的模版了，不过感觉很好看，研究了好久才发现，有画蛇添足的感觉 #}
+{% load static %}
+
+<html lang="zh-CN">
+    <head>
+        <link href="{% static 'css/Main.css' %}" rel="stylesheet">
+        <title>404 fans-food</title>
+        <link rel="shortcut icon" href="{% static 'media/image/favicon.ico' %}">
+    </head>
+    <body>
+        <div id="main">
+            <div id="msg">Page not found</div>
+            <div id="error">
+                <div id="f1">4</div>
+                <div id="circle">
+                    <div id="smalldot"></div>
+                </div>
+                <div id="f2">4</div>
+            </div>
+
+            <div id="info">We can't seem to find the page<br>you're looking for.</div>
+            <a href="{% url 'home_page' %}">
+                <div id="btn">Back to homepage</div>
+            </a>
+        </div>
+
+        <div id="ring"></div>
+
+        <div class="dusk" id="d1"></div>
+        <div class="dusk" id="d2"></div>
+        <div class="dusk" id="d3"></div>
+        <div class="dusk" id="d4"></div>
+        <div class="dusk" id="d5"></div>
+        <div class="dusk" id="d6"></div>
+        <div class="dusk" id="d7"></div>
+        <div class="dusk" id="d8"></div>
+        <div class="dusk" id="d9"></div>
+    </body>
+</html>

@@ -1,0 +1,181 @@
+INFO 2019-05-29 11:36:29,258 autoreload Watching for file changes with StatReloader
+WARNING 2019-05-29 11:36:58,862 log Not Found: /media//media/food_article/1557574095-4oqE/sample.jpg/
+INFO 2019-05-29 11:40:26,652 autoreload Watching for file changes with StatReloader
+WARNING 2019-05-29 11:40:29,970 log Not Found: /media//media/food_article/1557574095-4oqE/full.jpg/
+INFO 2019-05-29 11:41:35,472 autoreload Watching for file changes with StatReloader
+WARNING 2019-05-29 11:41:38,133 log Not Found: /favicon.ico
+INFO 2019-05-29 11:42:40,378 autoreload Watching for file changes with StatReloader
+WARNING 2019-05-29 11:42:44,475 log Not Found: /media/media/food_article/full.jpg/
+INFO 2019-05-29 11:43:51,332 autoreload Watching for file changes with StatReloader
+WARNING 2019-05-29 11:43:55,321 log Not Found: /media/media/food_article/full.jpg/
+INFO 2019-05-29 11:44:26,773 autoreload Watching for file changes with StatReloader
+INFO 2019-05-29 11:57:50,570 autoreload Watching for file changes with StatReloader
+INFO 2019-05-29 11:58:24,858 autoreload Watching for file changes with StatReloader
+INFO 2019-05-29 12:00:43,635 autoreload Watching for file changes with StatReloader
+INFO 2019-05-29 12:38:04,683 autoreload F:\git\blog\django_food\apps\food\views.py changed, reloading.
+INFO 2019-05-29 12:38:07,329 autoreload Watching for file changes with StatReloader
+INFO 2019-05-29 12:48:39,465 autoreload Watching for file changes with StatReloader
+INFO 2019-05-29 12:49:05,054 autoreload Watching for file changes with StatReloader
+INFO 2019-05-29 12:49:28,179 autoreload F:\git\blog\django_food\django_food\settings.py changed, reloading.
+INFO 2019-05-29 12:49:30,122 autoreload Watching for file changes with StatReloader
+INFO 2019-05-29 12:49:46,844 autoreload Watching for file changes with StatReloader
+INFO 2019-05-29 12:58:20,648 autoreload Watching for file changes with StatReloader
+INFO 2019-05-29 13:30:15,647 autoreload F:\git\blog\django_food\django_food\urls.py changed, reloading.
+INFO 2019-05-29 13:30:18,602 autoreload Watching for file changes with StatReloader
+INFO 2019-05-29 13:30:25,609 autoreload Watching for file changes with StatReloader
+INFO 2019-05-29 14:13:32,116 autoreload F:\git\blog\django_food\apps\operation\views.py changed, reloading.
+INFO 2019-05-29 14:13:35,146 autoreload Watching for file changes with StatReloader
+WARNING 2019-05-29 14:13:41,021 log Not Found: /Main.css
+WARNING 2019-05-29 14:13:41,162 log Not Found: /favicon.ico
+WARNING 2019-05-29 14:13:43,246 log Not Found: /Main.css
+INFO 2019-05-29 14:14:32,998 autoreload Watching for file changes with StatReloader
+WARNING 2019-05-29 14:14:36,044 log Not Found: /Main.css
+WARNING 2019-05-29 14:14:36,904 log Not Found: /Main.css
+WARNING 2019-05-29 14:15:40,507 log Not Found: /favicon.ico
+WARNING 2019-05-29 14:16:40,676 log Not Found: /favicon.ico
+WARNING 2019-05-29 14:16:41,229 log Not Found: /favicon.ico
+INFO 2019-05-29 14:17:01,352 autoreload Watching for file changes with StatReloader
+WARNING 2019-05-29 14:17:07,217 log Not Found: /favicon.ico
+WARNING 2019-05-29 14:17:07,794 log Not Found: /favicon.ico
+INFO 2019-05-29 14:17:24,437 autoreload Watching for file changes with StatReloader
+WARNING 2019-05-29 14:17:28,946 log Not Found: /favicon.ico
+INFO 2019-05-29 14:19:13,672 autoreload Watching for file changes with StatReloader
+INFO 2019-05-29 14:19:32,931 autoreload Watching for file changes with StatReloader
+INFO 2019-05-29 14:52:39,577 autoreload F:\git\blog\django_food\apps\food\views.py changed, reloading.
+INFO 2019-05-29 14:52:41,543 autoreload Watching for file changes with StatReloader
+INFO 2019-05-29 15:42:33,069 autoreload Watching for file changes with StatReloader
+INFO 2019-05-29 18:58:16,739 autoreload Watching for file changes with StatReloader
+WARNING 2019-05-29 18:58:29,761 log Not Found: /favicon.ico
+WARNING 2019-05-29 18:59:36,060 log Forbidden (CSRF token missing or incorrect.): /xadmin/
+WARNING 2019-05-29 18:59:39,410 log Forbidden (CSRF token missing or incorrect.): /xadmin/
+WARNING 2019-05-29 18:59:47,280 log Forbidden (CSRF token missing or incorrect.): /xadmin/
+WARNING 2019-05-29 18:59:47,442 log Not Found: /favicon.ico
+INFO 2019-05-29 19:06:26,385 autoreload F:\git\blog\django_food\apps\operation\views.py changed, reloading.
+INFO 2019-05-29 19:06:29,493 autoreload Watching for file changes with StatReloader
+INFO 2019-05-29 19:07:15,313 autoreload Watching for file changes with StatReloader
+ERROR 2019-05-29 19:08:24,609 log Internal Server Error: /xadmin/food/tags/add/
+Traceback (most recent call last):
+  File "F:\git\blog\django_food\venv\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "F:\git\blog\django_food\venv\lib\site-packages\django\core\handlers\base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "F:\git\blog\django_food\venv\lib\site-packages\django\core\handlers\base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "F:\git\blog\django_food\venv\lib\site-packages\xadmin\sites.py", line 300, in wrapper
+    return self.admin_view(view, cacheable)(*args, **kwargs)
+  File "F:\git\blog\django_food\venv\lib\site-packages\django\views\decorators\cache.py", line 44, in _wrapped_view_func
+    response = view_func(request, *args, **kwargs)
+  File "F:\git\blog\django_food\venv\lib\site-packages\xadmin\sites.py", line 208, in inner
+    return view(request, *args, **kwargs)
+  File "F:\git\blog\django_food\venv\lib\site-packages\xadmin\views\base.py", line 271, in view
+    self = cls(request, *args, **kwargs)
+  File "F:\git\blog\django_food\venv\lib\site-packages\xadmin\views\edit.py", line 85, in __init__
+    super(ModelFormAdminView, self).__init__(request, *args, **kwargs)
+  File "F:\git\blog\django_food\venv\lib\site-packages\xadmin\views\base.py", line 499, in __init__
+    super(ModelAdminView, self).__init__(request, *args, **kwargs)
+  File "F:\git\blog\django_food\venv\lib\site-packages\xadmin\views\base.py", line 266, in __init__
+    self.init_request(*args, **kwargs)
+  File "F:\git\blog\django_food\venv\lib\site-packages\xadmin\views\edit.py", line 375, in init_request
+    self.prepare_form()
+  File "F:\git\blog\django_food\venv\lib\site-packages\xadmin\views\base.py", line 80, in method
+    return filter_chain(filters, len(filters) - 1, _inner_method, *args, **kwargs)
+  File "F:\git\blog\django_food\venv\lib\site-packages\xadmin\views\base.py", line 49, in filter_chain
+    return func()
+  File "F:\git\blog\django_food\venv\lib\site-packages\xadmin\views\base.py", line 74, in _inner_method
+    return func(self, *args, **kwargs)
+  File "F:\git\blog\django_food\venv\lib\site-packages\xadmin\views\edit.py", line 141, in prepare_form
+    self.model_form = self.get_model_form()
+  File "F:\git\blog\django_food\venv\lib\site-packages\xadmin\views\base.py", line 80, in method
+    return filter_chain(filters, len(filters) - 1, _inner_method, *args, **kwargs)
+  File "F:\git\blog\django_food\venv\lib\site-packages\xadmin\views\base.py", line 63, in filter_chain
+    return filter_chain(filters, token - 1, _inner_method, *args, **kwargs)
+  File "F:\git\blog\django_food\venv\lib\site-packages\xadmin\views\base.py", line 49, in filter_chain
+    return func()
+  File "F:\git\blog\django_food\venv\lib\site-packages\xadmin\views\base.py", line 62, in _inner_method
+    return fm(func if fargs[1] == '__' else func(), *args, **kwargs)
+  File "F:\git\blog\django_food\venv\lib\site-packages\xadmin\plugins\quickform.py", line 30, in get_model_form
+    return __()
+  File "F:\git\blog\django_food\venv\lib\site-packages\xadmin\views\base.py", line 74, in _inner_method
+    return func(self, *args, **kwargs)
+  File "F:\git\blog\django_food\venv\lib\site-packages\xadmin\views\edit.py", line 185, in get_model_form
+    return modelform_factory(self.model, **defaults)
+  File "F:\git\blog\django_food\venv\lib\site-packages\django\forms\models.py", line 551, in modelform_factory
+    return type(form)(class_name, (form,), form_class_attrs)
+  File "F:\git\blog\django_food\venv\lib\site-packages\django\forms\models.py", line 264, in __new__
+    message = message % (', '.join(missing_fields),
+TypeError: sequence item 0: expected str instance, tuple found
+INFO 2019-05-29 19:10:13,155 autoreload Watching for file changes with StatReloader
+INFO 2019-05-29 19:18:33,015 autoreload F:\git\blog\django_food\apps\operation\urls.py changed, reloading.
+INFO 2019-05-29 19:18:35,691 autoreload Watching for file changes with StatReloader
+INFO 2019-05-29 19:20:50,996 autoreload F:\git\blog\django_food\apps\operation\urls.py changed, reloading.
+INFO 2019-05-29 19:20:52,973 autoreload Watching for file changes with StatReloader
+INFO 2019-05-29 19:26:02,214 autoreload Watching for file changes with StatReloader
+INFO 2019-05-29 19:28:32,641 autoreload Watching for file changes with StatReloader
+INFO 2019-05-29 19:33:38,149 autoreload Watching for file changes with StatReloader
+INFO 2019-05-31 10:35:39,360 autoreload Watching for file changes with StatReloader
+WARNING 2019-05-31 10:36:22,883 log Not Found: /favicon.ico
+INFO 2019-05-31 10:36:44,884 autoreload F:\git\blog\django_food\django_food\urls.py changed, reloading.
+INFO 2019-05-31 10:37:45,344 autoreload Watching for file changes with StatReloader
+INFO 2019-05-31 10:38:08,782 autoreload Watching for file changes with StatReloader
+INFO 2019-05-31 10:46:10,368 autoreload F:\git\blog\django_food\apps\user\views.py changed, reloading.
+INFO 2019-05-31 10:46:17,184 autoreload Watching for file changes with StatReloader
+INFO 2019-05-31 10:46:37,231 autoreload Watching for file changes with StatReloader
+INFO 2019-05-31 10:59:52,679 autoreload Watching for file changes with StatReloader
+INFO 2019-05-31 11:00:18,160 autoreload Watching for file changes with StatReloader
+INFO 2019-05-31 11:01:50,824 autoreload Watching for file changes with StatReloader
+INFO 2019-05-31 11:09:36,659 autoreload F:\git\blog\django_food\apps\user\views.py changed, reloading.
+INFO 2019-05-31 11:09:38,631 autoreload Watching for file changes with StatReloader
+INFO 2019-05-31 11:15:04,539 autoreload Watching for file changes with StatReloader
+ERROR 2019-05-31 11:15:13,671 log Internal Server Error: /user_center/upload_food_article/
+Traceback (most recent call last):
+  File "F:\git\blog\django_food\venv\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "F:\git\blog\django_food\venv\lib\site-packages\django\core\handlers\base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "F:\git\blog\django_food\venv\lib\site-packages\django\core\handlers\base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "F:\git\blog\django_food\venv\lib\site-packages\django\views\generic\base.py", line 71, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "F:\git\blog\django_food\venv\lib\site-packages\django\views\generic\base.py", line 97, in dispatch
+    return handler(request, *args, **kwargs)
+  File "F:\git\blog\django_food\apps\operation\views.py", line 658, in post
+    url = reverse("xadmin:foodfoodarticle")
+  File "F:\git\blog\django_food\venv\lib\site-packages\django\urls\base.py", line 90, in reverse
+    return iri_to_uri(resolver._reverse_with_prefix(view, prefix, *args, **kwargs))
+  File "F:\git\blog\django_food\venv\lib\site-packages\django\urls\resolvers.py", line 660, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'foodfoodarticle' not found. 'foodfoodarticle' is not a valid view function or pattern name.
+INFO 2019-05-31 11:16:12,521 autoreload Watching for file changes with StatReloader
+ERROR 2019-05-31 11:16:16,319 log Internal Server Error: /user_center/upload_food_article/
+Traceback (most recent call last):
+  File "F:\git\blog\django_food\venv\lib\site-packages\django\core\handlers\exception.py", line 34, in inner
+    response = get_response(request)
+  File "F:\git\blog\django_food\venv\lib\site-packages\django\core\handlers\base.py", line 115, in _get_response
+    response = self.process_exception_by_middleware(e, request)
+  File "F:\git\blog\django_food\venv\lib\site-packages\django\core\handlers\base.py", line 113, in _get_response
+    response = wrapped_callback(request, *callback_args, **callback_kwargs)
+  File "F:\git\blog\django_food\venv\lib\site-packages\django\views\generic\base.py", line 71, in view
+    return self.dispatch(request, *args, **kwargs)
+  File "F:\git\blog\django_food\venv\lib\site-packages\django\views\generic\base.py", line 97, in dispatch
+    return handler(request, *args, **kwargs)
+  File "F:\git\blog\django_food\apps\operation\views.py", line 658, in post
+    url = reverse("food:foodarticle")
+  File "F:\git\blog\django_food\venv\lib\site-packages\django\urls\base.py", line 90, in reverse
+    return iri_to_uri(resolver._reverse_with_prefix(view, prefix, *args, **kwargs))
+  File "F:\git\blog\django_food\venv\lib\site-packages\django\urls\resolvers.py", line 660, in _reverse_with_prefix
+    raise NoReverseMatch(msg)
+django.urls.exceptions.NoReverseMatch: Reverse for 'foodarticle' not found. 'foodarticle' is not a valid view function or pattern name.
+INFO 2019-05-31 11:21:12,532 autoreload Watching for file changes with StatReloader
+INFO 2019-05-31 11:24:32,743 autoreload Watching for file changes with StatReloader
+WARNING 2019-05-31 11:24:42,610 log Not Found: /favicon.ico
+INFO 2019-05-31 11:27:55,906 autoreload F:\git\blog\django_food\apps\operation\views.py changed, reloading.
+INFO 2019-05-31 11:28:09,361 autoreload Watching for file changes with StatReloader
+INFO 2019-05-31 11:33:50,127 autoreload Watching for file changes with StatReloader
+INFO 2019-05-31 11:46:57,629 autoreload Watching for file changes with StatReloader
+INFO 2019-05-31 14:11:55,422 autoreload Watching for file changes with StatReloader
+INFO 2019-05-31 14:19:50,453 autoreload F:\git\real_blog\django_food\venv\Lib\site-packages\xadmin\plugins\inline.py changed, reloading.
+INFO 2019-05-31 14:19:52,423 autoreload Watching for file changes with StatReloader
+INFO 2019-05-31 14:21:02,539 autoreload F:\git\real_blog\django_food\venv\Lib\site-packages\xadmin\plugins\multiselect.py changed, reloading.
+INFO 2019-05-31 14:21:04,557 autoreload Watching for file changes with StatReloader
+INFO 2019-05-31 14:48:24,429 autoreload F:\git\real_blog\django_food\venv\Lib\site-packages\pure_pagination\paginator.py changed, reloading.
+INFO 2019-05-31 14:48:26,481 autoreload Watching for file changes with StatReloader

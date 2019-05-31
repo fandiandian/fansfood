@@ -1,0 +1,39 @@
+
+{% load static %}
+
+<html lang="zh-CN">
+<head>
+    <link href="{% static 'css/Main.css' %}" rel="stylesheet">
+    <title>403 fans-food</title>
+    <link rel="shortcut icon" href="{% static 'media/image/favicon.ico' %}">
+</head>
+<body>
+<div id="main">
+    <div id="msg">Page Forbidden</div>
+    <div id="error">
+        <div id="f1">4</div>
+        <div id="circle">
+            <div id="smalldot"></div>
+        </div>
+        <div id="f2">3</div>
+    </div>
+
+    <div id="info">啊呀，页面的访问被禁止了...</div>
+    <a href="{% url 'home_page' %}">
+        <div id="btn">回到首页</div>
+    </a>
+</div>
+
+<div id="ring"></div>
+
+<div class="dusk" id="d1"></div>
+<div class="dusk" id="d2"></div>
+<div class="dusk" id="d3"></div>
+<div class="dusk" id="d4"></div>
+<div class="dusk" id="d5"></div>
+<div class="dusk" id="d6"></div>
+<div class="dusk" id="d7"></div>
+<div class="dusk" id="d8"></div>
+<div class="dusk" id="d9"></div>
+</body>
+</html>
