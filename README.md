@@ -14,6 +14,6 @@
 所爬取的数据以上传 onedive，可通过链接：https://1drv.ms/u/s!Aty_si880w59l3oJvMOTb8EcyVlW 下载<br>
 
 ## xadmin 的适配 Django2.2 存在一些问题，需要作出一些函数修改
-安装：
-    pip install https://codeload.github.com/sshwsfc/xadmin/zip/django2 <br>
-这个是最快的的，git 的方式安装太慢了<br>
+安装：这个是最快的，git 的方式安装太慢了<br>
+    pip install https://codeload.github.com/sshwsfc/xadmin/zip/django2
+
