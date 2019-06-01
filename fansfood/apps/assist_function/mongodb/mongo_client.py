@@ -15,20 +15,10 @@ class ConnectError(Exception):
     pass
 
 
-def mongo_client(host=None, port=None, username=None, password=None):
+def mongo_client(host="127.0.0.1", port=27017, username="nick", password="abc123456"):
     """
     MongoDB 客户端对象, 完成数据库的连接，并切换数据库，完成认证
     """
-
-    # 给定默认值
-    if not host:
-        host = "127.0.0.1"
-    if not port:
-        port = 27017
-    if not username:
-        username = "nick"
-    if not password:
-        password = "abc123456"
 
     try:
         client = pymongo.MongoClient(host=host, port=port)
