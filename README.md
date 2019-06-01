@@ -17,7 +17,7 @@
 ## 数据来源
 数据获取：使用 requests + bs4 + re<br>
 代理ip使用的是阿布云动态版<br>
-网站数据来源：制作教程（美食天下 <https://www.meishichina.com/>）+ 图片（<https://www.pexels.com/>）<br>
+网站数据来源：制作教程（美食天下 <https://www.meishichina.com/>）+ 图片（<https://pixabay.com/zh/>）<br>
 爬虫代码的位置：/apps/assist_function/data_crawler, 文件保存路径相关的需要自己修改<br>
 爬取的数据是直接存储在 MongoDB 中，根据模型的设计，再进行分割转储到 MySQL 中<br>
 由于数据分为图片和其他一些文字信息，太大所以未上传至github，如果需要可以联系我，我将图片和mysql的文件发给你
